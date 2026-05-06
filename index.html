@@ -180,6 +180,44 @@
             color: var(--muted);
             font-size: 12px;
         }
+        .category-main {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 8px;
+        }
+
+        .category-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 0 0 auto;
+        }
+
+        .category-manage-btn {
+            min-height: 28px;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid rgba(79, 117, 144, .20);
+            background: rgba(255, 254, 249, .68);
+            color: var(--blue-dark);
+            font-size: 18px;
+            line-height: 1;
+            box-shadow: none;
+        }
+
+        .category-manage-btn:hover {
+            transform: none;
+            background: rgba(79, 117, 144, .12);
+            border-color: rgba(79, 117, 144, .34);
+        }
+
 
         .add-category-btn {
             width: 100%;
@@ -817,6 +855,58 @@
             display: flex;
             gap: 10px;
         }
+        .category-modal-actions {
+            margin-top: 10px;
+        }
+
+        .category-modal-actions .modal-buttons {
+            margin-top: 0;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        .manage-category-buttons .btn-save,
+        .manage-category-buttons .btn-delete,
+        .manage-category-buttons .btn-cancel {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 8px 16px;
+            font-size: 13px;
+            flex: 0 0 auto;
+        }
+
+        .manage-category-buttons .btn-save {
+            min-width: 96px;
+        }
+
+        .manage-category-buttons .btn-delete {
+            min-width: 82px;
+        }
+
+        .manage-category-buttons .btn-cancel {
+            min-width: 78px;
+        }
+
+        .category-delete-note {
+            margin: 10px 2px 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .btn-danger-soft {
+            background: rgba(105, 48, 58, .10);
+            color: #69303a;
+            border: 1px solid rgba(105, 48, 58, .24);
+        }
+
+        .btn-danger-soft:hover {
+            background: rgba(105, 48, 58, .16);
+            border-color: rgba(105, 48, 58, .34);
+        }
+
 
         .export-options {
             display: flex;
@@ -1382,6 +1472,328 @@
             }
         }
 
+
+        /* Mobile responsive patch v23: phone layout only, desktop remains unchanged */
+        @media (max-width: 768px) {
+            html,
+            body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            body {
+                min-height: 100dvh;
+                background:
+                    radial-gradient(circle at 0% 0%, rgba(82, 107, 75, .10), transparent 18rem),
+                    linear-gradient(135deg, #fbfaf3 0%, #f2f5ee 100%);
+            }
+
+            .container {
+                width: 100%;
+                max-width: none;
+                padding: 10px;
+                min-height: 100dvh;
+            }
+
+            .main-content {
+                width: 100%;
+                min-height: calc(100dvh - 20px);
+                border-radius: 26px;
+                overflow: hidden;
+            }
+
+            .header {
+                min-height: 0;
+                padding: 24px 14px 16px;
+            }
+
+            .title {
+                font-size: clamp(26px, 8vw, 34px);
+                line-height: 1.16;
+                margin-bottom: 18px;
+                letter-spacing: .08em;
+            }
+
+            .capture-stack {
+                width: 100%;
+            }
+
+            .input-area {
+                width: 100%;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) 48px;
+                align-items: center;
+                gap: 8px;
+                padding: 7px;
+                border-radius: 30px;
+            }
+
+            #newSetting,
+            .input-area textarea {
+                min-height: 48px;
+                height: 48px;
+                max-height: 110px;
+                border-radius: 24px;
+                padding: 12px 16px 10px;
+                line-height: 24px;
+                font-size: 15px;
+                overflow-y: hidden;
+            }
+
+            #newSetting::placeholder {
+                line-height: 24px;
+            }
+
+            .input-area .button-group {
+                margin-top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                width: 48px;
+                min-width: 48px;
+            }
+
+            .input-area .btn-primary,
+            .input-area .add-symbol-btn,
+            .add-symbol-btn {
+                width: 48px;
+                min-width: 48px;
+                height: 48px;
+                min-height: 48px;
+                flex: 0 0 48px;
+                flex-basis: 48px;
+                border-radius: 50%;
+                padding: 0;
+            }
+
+            .duplicate-notice {
+                width: 100%;
+                border-radius: 20px;
+                padding: 8px 10px 8px 12px;
+                align-items: center;
+            }
+
+            .library-toggle {
+                width: calc(100% - 28px);
+                margin: 0 auto 14px;
+                min-height: 48px;
+                padding: 9px 16px;
+                border-radius: 24px;
+            }
+
+            .library-toggle-title {
+                font-size: 16px;
+            }
+
+            .library-toggle-count {
+                font-size: 13px;
+            }
+
+            .library-panel.open {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .library-panel .sidebar {
+                width: 100%;
+                max-height: none;
+                height: auto;
+                min-height: 0;
+                display: block;
+                position: static;
+                border-right: 0;
+                border-bottom: 1px solid rgba(214, 201, 182, .7);
+                border-radius: 0;
+                padding: 12px 12px 10px;
+                overflow: visible;
+                background: rgba(255, 254, 249, .36);
+            }
+
+            .library-panel .sidebar::before,
+            .library-panel .sidebar h2 {
+                display: none;
+            }
+
+            .library-panel .category-list {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 8px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                max-height: none;
+                padding: 2px 2px 8px;
+                margin: 0;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .library-panel .category-list::-webkit-scrollbar {
+                display: none;
+            }
+
+            .library-panel .category-item {
+                flex: 0 0 auto;
+                min-height: 38px;
+                margin: 0;
+                padding: 8px 12px;
+                gap: 9px;
+                white-space: nowrap;
+            }
+
+            .library-panel .category-count {
+                margin-left: 4px;
+            }
+
+            .library-panel .add-category-btn {
+                width: auto;
+                min-height: 38px;
+                margin: 6px 0 0;
+                padding: 8px 14px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 999px;
+                white-space: nowrap;
+            }
+
+            .library-main {
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .library-tools {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 14px 12px;
+            }
+
+            .library-tools .search-box {
+                width: 100%;
+                min-height: 44px;
+                border-radius: 22px;
+                font-size: 15px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .library-actions {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 8px;
+                white-space: normal;
+            }
+
+            .library-actions .btn-secondary,
+            .library-actions .organize-entry-btn {
+                width: 100%;
+                min-width: 0;
+                min-height: 42px;
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+
+            .batch-toolbar.active {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                gap: 8px;
+                border-radius: 20px;
+            }
+
+            .batch-category-strip {
+                width: 100%;
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            .content-area {
+                padding: 14px 12px 18px;
+                background:
+                    radial-gradient(circle at 100% 0%, rgba(82, 107, 75, .06), transparent 14rem);
+            }
+
+            .settings-list {
+                gap: 12px;
+            }
+
+            .setting-item {
+                grid-template-columns: 42px minmax(0, 1fr);
+                column-gap: 10px;
+                row-gap: 10px;
+                padding: 16px 14px 14px;
+                border-radius: 24px;
+            }
+
+            .setting-item:nth-child(3n + 1),
+            .setting-item:nth-child(3n + 2),
+            .setting-item:nth-child(3n) {
+                border-radius: 24px;
+            }
+
+            .setting-number {
+                padding: 3px 8px;
+                font-size: 12px;
+            }
+
+            .setting-content {
+                font-size: 15px;
+                line-height: 1.72;
+            }
+
+            .setting-actions {
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .btn-edit,
+            .btn-delete,
+            .btn-save,
+            .btn-cancel {
+                min-height: 38px;
+                padding: 8px 14px;
+            }
+
+            .edit-area {
+                grid-column: 2;
+            }
+
+            .edit-category-picker {
+                width: 100%;
+            }
+
+            .footer {
+                display: none;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .category-item {
+                flex: 0 0 auto;
+                gap: 8px;
+            }
+
+            .category-main {
+                padding-right: 0;
+                max-width: 150px;
+            }
+
+            .category-meta {
+                gap: 5px;
+            }
+
+            .category-manage-btn {
+                width: 30px;
+                height: 30px;
+                min-height: 30px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1461,6 +1873,22 @@
         </div>
     </div>
 
+    <div class="modal" id="manageCategoryModal" role="dialog" aria-modal="true" aria-labelledby="manageCategoryTitle">
+        <div class="modal-content">
+            <h3 class="modal-title" id="manageCategoryTitle">管理分类</h3>
+            <input type="text" class="modal-input" id="manageCategoryNameInput" placeholder="输入分类名称...">
+            <div class="category-modal-actions">
+                <div class="modal-buttons manage-category-buttons">
+                    <button class="btn-save" onclick="renameCategory()">保存</button>
+                    <button class="btn-delete" id="deleteCategoryBtn" onclick="deleteCategory()">删除</button>
+                    <button class="btn-cancel" onclick="closeModal('manageCategoryModal')">取消</button>
+                </div>
+            </div>
+            <p class="category-delete-note" id="deleteCategoryNote"></p>
+        </div>
+    </div>
+
+
     <div class="modal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
         <div class="modal-content">
             <h3 class="modal-title" id="exportTitle">导出设定</h3>
@@ -1487,6 +1915,7 @@
         let lastModified = null;
         let draggedItem = null;
         let draggedCategory = null;
+        let managingCategory = null;
         let dragMode = null;
         let similarCandidateId = null;
         let similarCandidateContent = '';
@@ -1638,28 +2067,34 @@
         function renderCategories() {
             const list = document.getElementById('categoryList');
             const allCount = settings.length;
-            
+
             let html = `
                 <li class="category-item ${currentCategory === 'all' ? 'active' : ''}" data-category="all" onclick="switchCategory('all')">
-                    <span>全部设定</span>
-                    <span class="category-count">${allCount}</span>
+                    <span class="category-main">全部设定</span>
+                    <span class="category-meta">
+                        <span class="category-count">${allCount}</span>
+                    </span>
                 </li>
             `;
-            
+
             categories.forEach(cat => {
                 const count = settings.filter(s => s.category === cat).length;
+                const canManage = cat !== getDefaultCategory();
                 html += `
                     <li class="category-item ${currentCategory === cat ? 'active' : ''}" data-category="${escapeHtml(cat)}" draggable="true" onclick="switchCategory('${escapeJs(cat)}')" ondragstart="handleCategorySortStart(event, '${escapeJs(cat)}')" ondragover="handleCategoryDragOver(event)" ondragenter="handleCategoryDragEnter(event)" ondragleave="handleCategoryDragLeave(event)" ondrop="handleCategoryDrop(event, '${escapeJs(cat)}')" ondragend="handleCategorySortEnd(event)">
-                        <span>${escapeHtml(cat)}</span>
-                        <span class="category-count">${count}</span>
+                        <span class="category-main">${escapeHtml(cat)}</span>
+                        <span class="category-meta">
+                            <span class="category-count">${count}</span>
+                            ${canManage ? `<button type="button" class="category-manage-btn" aria-label="管理分类" onclick="showManageCategoryModal(event, '${escapeJs(cat)}')" onmousedown="event.stopPropagation()" draggable="false">⋯</button>` : ''}
+                        </span>
                     </li>
                 `;
             });
-            
+
             list.innerHTML = html;
             updateLibraryCount();
         }
-        
+
         // 切换分类
         function switchCategory(category) {
             currentCategory = category;
@@ -2082,6 +2517,116 @@
             document.getElementById('categoryNameInput').focus();
         }
         
+        function showManageCategoryModal(event, category) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            if (!category || category === getDefaultCategory()) return;
+
+            managingCategory = category;
+            const input = document.getElementById('manageCategoryNameInput');
+            const note = document.getElementById('deleteCategoryNote');
+            const deleteBtn = document.getElementById('deleteCategoryBtn');
+
+            if (input) input.value = category;
+
+            const count = settings.filter(s => s.category === category).length;
+            if (note) {
+                note.textContent = count > 0
+                    ? `删除后，${count} 条设定会移入${getDefaultCategory()}。`
+                    : '';
+            }
+            if (deleteBtn) deleteBtn.style.display = 'inline-flex';
+
+            document.getElementById('manageCategoryModal').classList.add('active');
+            setTimeout(() => {
+                if (input) {
+                    input.focus();
+                    input.select();
+                }
+            }, 0);
+        }
+
+        function renameCategory() {
+            if (!managingCategory) return;
+
+            const input = document.getElementById('manageCategoryNameInput');
+            const newName = input.value.trim();
+            const oldName = managingCategory;
+
+            if (!newName) {
+                alert('请输入分类名称');
+                return;
+            }
+
+            if (newName === getDefaultCategory() && oldName !== getDefaultCategory()) {
+                alert('分类已存在');
+                return;
+            }
+
+            if (newName !== oldName && categories.includes(newName)) {
+                alert('分类已存在');
+                return;
+            }
+
+            const index = categories.indexOf(oldName);
+            if (index === -1) return;
+
+            categories[index] = newName;
+            settings.forEach(setting => {
+                if (setting.category === oldName) {
+                    setting.category = newName;
+                }
+            });
+
+            if (currentCategory === oldName) {
+                currentCategory = newName;
+            }
+
+            managingCategory = null;
+            updateLastModified();
+            renderCategories();
+            renderSettings();
+            closeModal('manageCategoryModal');
+        }
+
+        function deleteCategory() {
+            if (!managingCategory || managingCategory === getDefaultCategory()) return;
+
+            const category = managingCategory;
+            const count = settings.filter(s => s.category === category).length;
+            const message = count > 0
+                ? `确定删除分类「${category}」吗？\n\n${count} 条设定会移入「${getDefaultCategory()}」。`
+                : `确定删除分类「${category}」吗？`;
+
+            if (!confirm(message)) return;
+
+            settings.forEach(setting => {
+                if (setting.category === category) {
+                    setting.category = getDefaultCategory();
+                }
+            });
+
+            categories = categories.filter(cat => cat !== category);
+
+            if (currentCategory === category) {
+                currentCategory = getDefaultCategory();
+            }
+
+            if (!isUncategorizedView()) {
+                organizeMode = false;
+                batchSelectedIds.clear();
+            }
+
+            managingCategory = null;
+            updateLastModified();
+            renderCategories();
+            renderSettings();
+            closeModal('manageCategoryModal');
+        }
+
         function addCategory() {
             const input = document.getElementById('categoryNameInput');
             const name = input.value.trim();
@@ -2229,6 +2774,9 @@
         // 关闭模态框
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
+            if (id === 'manageCategoryModal') {
+                managingCategory = null;
+            }
         }
         
         // HTML转义
@@ -2289,6 +2837,12 @@
         document.getElementById('categoryNameInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 addCategory();
+            }
+        });
+        
+        document.getElementById('manageCategoryNameInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                renameCategory();
             }
         });
         
