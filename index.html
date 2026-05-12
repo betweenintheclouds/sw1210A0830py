@@ -19,6 +19,14 @@
             font-display: swap;
         }
 
+        @font-face {
+            font-family: "ChopinScript";
+            src: url("./fonts/chopinscript.woff") format("woff");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --paper: #fbfaf3;
             --paper-light: #fffef9;
@@ -2860,7 +2868,7 @@
             }
 
             .mobile-sidebar-tools {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(3, minmax(0, 1fr));
                 gap: 8px;
                 padding-top: 14px;
                 margin-top: 14px;
@@ -3333,6 +3341,15 @@
             line-height: 1.5;
         }
 
+        .export-version-time,
+        .export-version-counts {
+            display: block;
+        }
+
+        .export-version-counts {
+            margin-top: 2px;
+        }
+
         .custom-confirm-content {
             max-width: 520px;
         }
@@ -3520,9 +3537,1340 @@
             }
         }
 
+
+
+
+        /* v45 front gate: Firebase password gate before the main room */
+        .front-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at 18% 16%, rgba(142, 166, 138, .18) 0 12rem, transparent 28rem),
+                radial-gradient(circle at 82% 20%, rgba(79, 117, 144, .13) 0 12rem, transparent 30rem),
+                linear-gradient(135deg, #fffef9 0%, #f7f3e9 55%, #eef5eb 100%);
+            transition: opacity .45s ease, visibility .45s ease;
+        }
+
+        .front-gate::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: .22;
+            mix-blend-mode: multiply;
+            background-image:
+                radial-gradient(rgba(56, 81, 58, .08) .55px, transparent .7px),
+                radial-gradient(rgba(184, 167, 121, .07) .45px, transparent .75px);
+            background-position: 0 0, 11px 15px;
+            background-size: 18px 18px, 23px 23px;
+        }
+
+        .front-gate-card {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 420px);
+            padding: 34px 28px 30px;
+            border-radius: 34px 24px 40px 28px;
+            border: 1px solid rgba(214, 201, 182, .86);
+            background: linear-gradient(135deg, rgba(255, 254, 249, .94), rgba(247, 243, 233, .86));
+            box-shadow: 0 28px 80px -46px rgba(36, 48, 42, .95);
+            backdrop-filter: blur(18px);
+            text-align: center;
+        }
+
+        .front-gate-title {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(28px, 7vw, 38px);
+            line-height: 1.08;
+            letter-spacing: .055em;
+            color: var(--moss-dark);
+            margin-bottom: 18px;
+        }
+
+        .front-gate-status {
+            min-height: 40px;
+            margin: 0 0 16px;
+            padding: 9px 12px;
+            border-radius: 18px;
+            border: 1px solid rgba(214, 201, 182, .70);
+            background: rgba(255, 253, 247, .68);
+            color: var(--moss-dark);
+            font-size: 13px;
+            line-height: 1.55;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .front-gate-status.error {
+            color: #69303a;
+            border-color: rgba(105, 48, 58, .24);
+            background: rgba(105, 48, 58, .075);
+        }
+
+        .front-gate-status.welcome {
+            animation: frontGateWelcomeGlow 2s ease;
+        }
+
+        @keyframes frontGateWelcomeGlow {
+            0% {
+                background: rgba(255, 253, 247, .68);
+                box-shadow: none;
+            }
+            30%, 72% {
+                background: rgba(236, 245, 232, .96);
+                box-shadow: 0 0 0 5px rgba(82, 107, 75, .11), 0 18px 34px -24px rgba(52, 70, 49, .64);
+            }
+            100% {
+                background: rgba(255, 253, 247, .68);
+                box-shadow: none;
+            }
+        }
+
+        .front-gate-form {
+            display: grid;
+            gap: 10px;
+        }
+
+        .front-gate-input {
+            width: 100%;
+            min-height: 46px;
+            padding: 11px 16px;
+            border: 1.5px solid rgba(214, 201, 182, .95);
+            border-radius: 999px;
+            background: rgba(255, 253, 247, .86);
+            color: var(--ink);
+            font-size: 15px;
+        }
+
+        .front-gate-input:focus {
+            outline: none;
+            border-color: rgba(82, 107, 75, .62);
+            background: rgba(255, 253, 247, .96);
+            box-shadow: 0 0 0 4px rgba(82, 107, 75, .12), inset 0 1px 0 rgba(255, 255, 255, .8);
+        }
+
+        .front-gate-button {
+            min-height: 46px;
+            margin-top: 2px;
+            justify-content: center;
+        }
+
+        body.gate-locked {
+            overflow: hidden;
+        }
+
+        body.gate-locked .container,
+        body.gate-locked .mobile-scroll-bottom-btn,
+        body.gate-locked .toast-stack {
+            display: none !important;
+        }
+
+        body.gate-unlocked .front-gate {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .front-gate {
+                padding: 18px;
+            }
+
+            .front-gate-card {
+                padding: 30px 22px 26px;
+                border-radius: 30px 24px 34px 24px;
+            }
+
+            .front-gate-title {
+                font-size: clamp(28px, 8vw, 34px);
+                margin-bottom: 16px;
+            }
+        }
+
+        /* v44 sync v1: manual Firebase sync, local library remains the default safe mode */
+        .sync-modal-content {
+            max-width: 520px;
+        }
+
+        .sync-auth-status {
+            margin: -4px 0 14px;
+            padding: 10px 13px;
+            border-radius: 18px;
+            border: 1px solid rgba(214, 201, 182, .72);
+            background: rgba(255, 253, 247, .72);
+            color: var(--moss-dark);
+            font-size: 13px;
+            line-height: 1.55;
+            font-weight: 700;
+        }
+
+        .sync-login-area,
+        .sync-user-area {
+            display: grid;
+            gap: 10px;
+        }
+
+        .sync-input {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 15px;
+            border: 1.5px solid rgba(214, 201, 182, .95);
+            border-radius: 999px;
+            background: rgba(255, 253, 247, .82);
+            color: var(--ink);
+            font-size: 14px;
+        }
+
+        .sync-input:focus {
+            outline: none;
+            border-color: rgba(82, 107, 75, .62);
+            box-shadow: 0 0 0 4px rgba(82, 107, 75, .12), inset 0 1px 0 rgba(255, 255, 255, .8);
+        }
+
+        .sync-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .sync-actions button,
+        .sync-login-area button {
+            min-height: 40px;
+        }
+
+        .sync-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 8px 10px;
+            white-space: nowrap;
+            font-weight: 800;
+        }
+
+        .sync-action-icon {
+            width: 19px;
+            height: 19px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 19px;
+            line-height: 1;
+        }
+
+        .sync-action-icon svg {
+            width: 19px;
+            height: 19px;
+            display: block;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sync-logout-btn {
+            background: rgba(105, 48, 58, .10);
+            color: #69303a;
+            border: 1px solid rgba(105, 48, 58, .24);
+            box-shadow: none;
+        }
+
+        .sync-logout-btn:hover {
+            background: rgba(105, 48, 58, .16);
+            border-color: rgba(105, 48, 58, .34);
+        }
+
+        .sync-user-label {
+            display: none;
+        }
+
+        .sync-auth-status.sync-home-glow {
+            animation: syncHomeGlow 2.1s ease;
+        }
+
+        @keyframes syncHomeGlow {
+            0% {
+                background: rgba(255, 253, 247, .72);
+                box-shadow: none;
+            }
+            32% {
+                background: rgba(236, 245, 232, .92);
+                box-shadow: 0 0 0 4px rgba(82, 107, 75, .11), 0 14px 30px -24px rgba(52, 70, 49, .64);
+            }
+            100% {
+                background: rgba(255, 253, 247, .72);
+                box-shadow: none;
+            }
+        }
+
+        body.modal-open .mobile-scroll-bottom-btn {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .sync-detail-card {
+            margin-top: 14px;
+            padding: 13px;
+            border-radius: 22px;
+            border: 1px solid rgba(214, 201, 182, .72);
+            background: rgba(255, 253, 247, .56);
+            font-size: 12px;
+            line-height: 1.65;
+            color: var(--muted);
+        }
+
+        .sync-detail-title {
+            margin-bottom: 7px;
+            color: var(--moss-dark);
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .sync-line,
+        .sync-compare-line {
+            display: grid;
+            grid-template-columns: 82px minmax(0, 1fr);
+            gap: 10px;
+            padding: 3px 0;
+        }
+
+        .sync-line span,
+        .sync-compare-line span {
+            color: var(--muted);
+        }
+
+        .sync-line strong,
+        .sync-compare-line strong {
+            color: var(--ink);
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .sync-compare-note {
+            margin-bottom: 12px;
+            color: #6f3540;
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 700;
+        }
+
+        .sync-compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .sync-compare-card {
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(214, 201, 182, .72);
+            background: rgba(255, 253, 247, .72);
+        }
+
+        .sync-compare-title {
+            margin-bottom: 6px;
+            color: var(--moss-dark);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .sync-safe-note {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .sync-modal-content {
+                width: min(92vw, 390px);
+            }
+
+            .sync-actions {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .sync-compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sync-line,
+            .sync-compare-line {
+                grid-template-columns: 68px minmax(0, 1fr);
+            }
+
+            body.mobile-search-open .library-actions {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+
+        /* v45.1 front gate and tool polish */
+        .front-gate-card.gate-welcome-state {
+            transform: translateY(4px) scale(1.01);
+            transition: transform .32s ease;
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-title {
+            margin-bottom: 12px;
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 112px;
+            font-size: 18px;
+            letter-spacing: .04em;
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-form {
+            display: none;
+        }
+
+        .library-icon-btn {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 38px;
+            height: 38px;
+            padding: 0 13px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .library-icon-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex: 0 0 18px;
+        }
+
+        .library-icon-btn svg circle {
+            fill: currentColor;
+            stroke: none;
+        }
+
+        .library-logout-btn,
+        .mobile-sidebar-tool-btn.logout-tool {
+            background: rgba(105, 48, 58, .10) !important;
+            color: #69303a !important;
+            border-color: rgba(105, 48, 58, .24) !important;
+        }
+
+        .library-logout-btn:hover,
+        .mobile-sidebar-tool-btn.logout-tool:hover {
+            background: rgba(105, 48, 58, .16) !important;
+            border-color: rgba(105, 48, 58, .34) !important;
+        }
+
+        .edit-category-menu {
+            max-height: min(280px, 48vh);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .batch-category-strip {
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            flex-wrap: nowrap;
+        }
+
+        .batch-category-btn {
+            flex: 0 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-sidebar-tools {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+                gap: 7px !important;
+            }
+
+            .mobile-sidebar-tool-btn.icon-tool {
+                min-height: 54px;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+
+            .mobile-sidebar-tool-btn.icon-tool svg,
+            .sync-action-icon svg {
+                stroke-width: 2 !important;
+            }
+
+            .mobile-sidebar-tool-btn.icon-tool span {
+                font-size: 11.5px;
+            }
+
+            .sync-actions {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+
+            .sync-action-btn {
+                gap: 5px;
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+
+            .front-gate-card.gate-welcome-state .front-gate-status {
+                min-height: 104px;
+                font-size: 17px;
+            }
+        }
+
+
+        /* v47 polish: full-category organize, mobile scroll fixes, and welcome vine */
+        .front-gate-card.gate-welcome-state {
+            padding-top: 38px;
+            padding-bottom: 34px;
+            transform: translateY(0) scale(1.015);
+        }
+
+        .front-gate-card.gate-welcome-state::before {
+            content: "";
+            position: absolute;
+            inset: 16px;
+            border-radius: 28px 20px 34px 22px;
+            border: 1px solid rgba(142, 166, 138, .22);
+            pointer-events: none;
+            opacity: .82;
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 152px;
+            border-color: rgba(142, 166, 138, .28);
+            background:
+                radial-gradient(circle at 50% 18%, rgba(142, 166, 138, .16), transparent 7rem),
+                rgba(255, 253, 247, .70);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .72), 0 18px 38px -32px rgba(52, 70, 49, .55);
+        }
+
+        .front-gate-welcome-wrap {
+            width: 100%;
+            display: grid;
+            place-items: center;
+            gap: 12px;
+            animation: welcomeDropIn .52s ease both;
+        }
+
+        .front-gate-welcome-text {
+            color: var(--moss-dark);
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: .055em;
+        }
+
+        .front-gate-vine {
+            width: min(260px, 88%);
+            height: 62px;
+            display: block;
+            opacity: .82;
+            overflow: visible;
+        }
+
+        .front-gate-vine-line {
+            fill: none;
+            stroke: rgba(88, 116, 86, .58);
+            stroke-width: 2.3;
+            stroke-linecap: round;
+            stroke-dasharray: 360;
+            stroke-dashoffset: 360;
+            animation: frontGateVineGrow 1.65s ease forwards .16s;
+        }
+
+        .front-gate-vine-leaf {
+            fill: rgba(142, 166, 138, .64);
+            opacity: 0;
+            transform-box: fill-box;
+            transform-origin: center;
+            transform: scale(.35) rotate(-8deg);
+            animation: frontGateLeafBloom .45s ease forwards;
+        }
+
+        .front-gate-vine-leaf.leaf-a { animation-delay: .66s; }
+        .front-gate-vine-leaf.leaf-b { animation-delay: 1.02s; }
+        .front-gate-vine-leaf.leaf-c { animation-delay: 1.34s; }
+
+        @keyframes welcomeDropIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes frontGateVineGrow {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes frontGateLeafBloom {
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .setting-item.editing {
+            z-index: 80;
+        }
+
+        .setting-item.editing .edit-category-picker.open {
+            z-index: 1200;
+        }
+
+        .setting-item.editing .edit-category-menu {
+            z-index: 1205;
+            max-height: min(260px, 42vh);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .batch-toolbar.active {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .batch-category-strip {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            white-space: nowrap;
+            flex-wrap: nowrap !important;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+            scrollbar-width: thin;
+        }
+
+        .batch-category-btn {
+            flex: 0 0 auto !important;
+        }
+
+        @media (max-width: 768px) {
+            body.mobile-organize-active .batch-toolbar.active {
+                flex-wrap: nowrap !important;
+                overflow: hidden !important;
+            }
+
+            body.mobile-organize-active .batch-category-strip {
+                flex: 1 1 auto !important;
+                width: auto !important;
+                order: 0 !important;
+            }
+
+            body.mobile-organize-active .batch-cancel-btn {
+                margin-left: 0 !important;
+                flex: 0 0 auto;
+            }
+
+            .setting-item.editing .edit-category-menu {
+                max-height: min(240px, 38vh);
+            }
+
+            .front-gate-card.gate-welcome-state .front-gate-status {
+                min-height: 140px;
+            }
+
+            .front-gate-welcome-text {
+                font-size: 18px;
+            }
+        }
+
+    
+
+        /* v48 fixes: current-category organize, mobile organize layout, dropdown stacking, and rebuilt vines */
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 210px;
+            padding: 14px 12px;
+        }
+
+        .front-gate-welcome-wrap {
+            width: 100%;
+            gap: 6px;
+        }
+
+        .front-gate-welcome-text {
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--moss-dark);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: .055em;
+            margin: 2px 0;
+        }
+
+        .front-gate-vine {
+            width: min(310px, 96%);
+            height: 58px;
+            display: block;
+            overflow: visible;
+            opacity: .96;
+        }
+
+        .front-gate-stem,
+        .front-gate-branch {
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .front-gate-stem {
+            stroke: rgba(56, 81, 58, .58);
+            stroke-width: 2.15;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            animation: frontGateVineGrow 1.55s cubic-bezier(.25, .72, .24, 1) forwards .12s;
+        }
+
+        .front-gate-stem.reverse {
+            animation-delay: .22s;
+        }
+
+        .front-gate-branch {
+            stroke: rgba(88, 116, 86, .45);
+            stroke-width: 1.55;
+            stroke-dasharray: 80;
+            stroke-dashoffset: 80;
+            animation: frontGateBranchGrow .62s ease forwards;
+        }
+
+        .front-gate-branch.branch-1 { animation-delay: .55s; }
+        .front-gate-branch.branch-2 { animation-delay: .75s; }
+        .front-gate-branch.branch-3 { animation-delay: .95s; }
+        .front-gate-branch.branch-4 { animation-delay: 1.12s; }
+
+        .front-gate-leaf {
+            opacity: 0;
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: frontGateLeafBloom .46s cubic-bezier(.22, .92, .32, 1.18) forwards;
+            animation-delay: var(--leaf-delay, 1s);
+        }
+
+        .front-gate-leaf.leaf-deep { fill: rgba(88, 116, 86, .62); }
+        .front-gate-leaf.leaf-mid { fill: rgba(142, 166, 138, .66); }
+        .front-gate-leaf.leaf-soft { fill: rgba(178, 194, 161, .62); }
+
+        @keyframes frontGateBranchGrow {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes frontGateLeafBloom {
+            0% { opacity: 0; transform: scale(.35) rotate(-8deg); }
+            72% { opacity: 1; transform: scale(1.08) rotate(1deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .setting-item {
+            z-index: 1;
+        }
+
+        .setting-item.editing,
+        .setting-item.category-menu-open {
+            position: relative;
+            z-index: 5000 !important;
+            overflow: visible !important;
+        }
+
+        .setting-item.category-menu-open .edit-category-picker {
+            z-index: 5001 !important;
+        }
+
+        .setting-item.category-menu-open .edit-category-menu {
+            z-index: 5002 !important;
+            max-height: min(320px, 46vh) !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .front-gate-card.gate-welcome-state .front-gate-status {
+                min-height: 190px;
+            }
+
+            .front-gate-vine {
+                width: min(292px, 98%);
+                height: 52px;
+            }
+
+            .front-gate-welcome-text {
+                font-size: 18px;
+                letter-spacing: .045em;
+            }
+
+            body.mobile-organize-active .library-panel.open .library-tools {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                padding: 10px 12px 12px;
+            }
+
+            body.mobile-organize-active .batch-toolbar.active {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) auto !important;
+                grid-template-areas:
+                    "status done"
+                    "targets targets" !important;
+                align-items: center;
+                gap: 8px 10px;
+                overflow: visible !important;
+                width: 100%;
+            }
+
+            body.mobile-organize-active .batch-status {
+                grid-area: status;
+                min-width: 0;
+                font-size: 13px;
+            }
+
+            body.mobile-organize-active .batch-cancel-btn {
+                grid-area: done;
+                margin-left: 0 !important;
+                justify-self: end;
+                min-height: 30px;
+                padding: 5px 12px;
+                font-size: 12px;
+            }
+
+            body.mobile-organize-active .batch-category-strip {
+                grid-area: targets;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                gap: 7px;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                order: initial !important;
+                padding: 2px 2px 6px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            body.mobile-organize-active .batch-category-strip::-webkit-scrollbar {
+                display: none;
+            }
+
+            body.mobile-organize-active .batch-category-btn {
+                flex: 0 0 auto !important;
+                white-space: nowrap;
+            }
+
+            .setting-item.category-menu-open .edit-category-menu {
+                max-height: min(300px, 48vh) !important;
+            }
+        }
+
+
+
+        /* v49 focused fixes: Chopin Script branding, clean welcome, and organize visibility */
+        .title,
+        .front-gate-title,
+        body::after {
+            font-family: "ChopinScript", cursive;
+            font-weight: 400;
+        }
+
+        .title {
+            font-size: clamp(42px, 5vw, 68px);
+            line-height: .95;
+            letter-spacing: .015em;
+        }
+
+        .front-gate-title {
+            font-size: clamp(46px, 12vw, 72px);
+            line-height: .88;
+            letter-spacing: .01em;
+        }
+
+        .front-gate-welcome-text {
+            font-family: "ChopinScript", cursive !important;
+            font-size: clamp(44px, 10vw, 70px) !important;
+            line-height: .9;
+            font-weight: 400 !important;
+            letter-spacing: .01em !important;
+            color: var(--moss-dark);
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 146px !important;
+            padding: 18px 16px !important;
+        }
+
+        .front-gate-vine,
+        .front-gate-vine-top,
+        .front-gate-vine-bottom,
+        .front-gate-stem,
+        .front-gate-branch,
+        .front-gate-leaf,
+        .front-gate-vine-line,
+        .front-gate-vine-leaf {
+            display: none !important;
+        }
+
+        .organize-entry-btn.organize-hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: clamp(40px, 12vw, 58px);
+                line-height: .9;
+                letter-spacing: .01em;
+            }
+
+            .front-gate-title {
+                font-size: clamp(48px, 15vw, 66px);
+            }
+
+            .front-gate-welcome-text {
+                font-size: clamp(42px, 14vw, 62px) !important;
+            }
+        }
+
+
+        /* v50 logo typography fix: controlled Chopin Script sizing and wrapping */
+        .title,
+        .front-gate-title,
+        .front-gate-welcome-text {
+            font-family: "ChopinScript", cursive !important;
+            font-weight: 400 !important;
+            letter-spacing: 0 !important;
+            color: var(--moss-dark);
+            text-wrap: balance;
+        }
+
+        .title .logo-line,
+        .front-gate-title .logo-line {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .title {
+            font-size: clamp(32px, 4.2vw, 48px) !important;
+            line-height: .86 !important;
+            margin: 0 auto 2px !important;
+            text-align: center;
+            max-width: 520px;
+        }
+
+        .front-gate-title {
+            font-size: clamp(36px, 8vw, 52px) !important;
+            line-height: .88 !important;
+            margin: 0 auto 18px !important;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .front-gate-welcome-text {
+            font-size: clamp(30px, 7.2vw, 42px) !important;
+            line-height: 1.15 !important;
+            max-width: 100%;
+            white-space: nowrap;
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 118px !important;
+            padding: 18px 18px !important;
+            background: rgba(248, 252, 245, .64) !important;
+        }
+
+        .front-gate-welcome-wrap {
+            gap: 0 !important;
+        }
+
+        @media (min-width: 769px) {
+            .title .logo-line {
+                display: inline;
+            }
+            .title .logo-line + .logo-line::before {
+                content: " ";
+            }
+        }
+
+        @media (max-width: 768px) {
+            .front-gate-card {
+                width: min(92vw, 420px);
+                padding: 30px 24px 28px;
+            }
+
+            .front-gate-title {
+                font-size: clamp(38px, 12vw, 52px) !important;
+                line-height: .86 !important;
+                max-width: 310px;
+            }
+
+            .title {
+                font-size: clamp(34px, 9.4vw, 44px) !important;
+                line-height: .84 !important;
+                max-width: 320px;
+            }
+
+            body.library-is-open .title {
+                font-size: clamp(25px, 6.8vw, 32px) !important;
+                line-height: .86 !important;
+                margin-bottom: 12px !important;
+                max-width: 250px;
+            }
+
+            .front-gate-welcome-text {
+                font-size: clamp(30px, 8vw, 38px) !important;
+                line-height: 1.14 !important;
+            }
+        }
+
+
+        /* v51 final logo and welcome typography reset */
+        .front-gate-vine,
+        .front-gate-vine-top,
+        .front-gate-vine-bottom,
+        .front-gate-stem,
+        .front-gate-branch,
+        .front-gate-leaf,
+        .front-gate-vine-line,
+        .front-gate-vine-leaf {
+            display: none !important;
+        }
+
+        .title,
+        .front-gate-title {
+            font-family: "ChopinScript", cursive !important;
+            font-weight: 400 !important;
+            color: var(--moss-dark) !important;
+            letter-spacing: 0 !important;
+            text-align: center !important;
+            overflow: visible !important;
+        }
+
+        .title .logo-line,
+        .front-gate-title .logo-line {
+            white-space: nowrap !important;
+        }
+
+        @media (min-width: 769px) {
+            .front-gate-title,
+            .title {
+                white-space: nowrap !important;
+            }
+
+            .front-gate-title .logo-line,
+            .title .logo-line {
+                display: inline !important;
+            }
+
+            .front-gate-title .logo-line + .logo-line::before,
+            .title .logo-line + .logo-line::before {
+                content: " " !important;
+            }
+
+            .front-gate-title {
+                font-size: clamp(48px, 6.2vw, 76px) !important;
+                line-height: 1.08 !important;
+                max-width: none !important;
+                width: 100% !important;
+                margin: 0 auto 28px !important;
+                padding: 16px 34px 26px !important;
+            }
+
+            .title {
+                font-size: clamp(54px, 5.6vw, 82px) !important;
+                line-height: 1.08 !important;
+                max-width: none !important;
+                width: 100% !important;
+                margin: 0 auto 34px !important;
+                padding: 10px 42px 32px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .front-gate-title,
+            .title {
+                white-space: normal !important;
+            }
+
+            .front-gate-title .logo-line,
+            .title .logo-line {
+                display: block !important;
+            }
+
+            .front-gate-title .logo-line + .logo-line::before,
+            .title .logo-line + .logo-line::before {
+                content: "" !important;
+            }
+
+            .front-gate-title {
+                font-size: clamp(44px, 14vw, 58px) !important;
+                line-height: .82 !important;
+                max-width: 260px !important;
+                margin: 0 auto 24px !important;
+                padding: 12px 0 18px !important;
+            }
+
+            .title {
+                font-size: clamp(36px, 11vw, 48px) !important;
+                line-height: .82 !important;
+                max-width: 235px !important;
+                margin: 0 auto 28px !important;
+                padding: 8px 0 22px !important;
+            }
+
+            body.library-is-open .title {
+                font-size: clamp(28px, 8vw, 36px) !important;
+                line-height: .82 !important;
+                max-width: 180px !important;
+                margin: 0 auto 18px !important;
+                padding: 4px 0 16px !important;
+            }
+        }
+
+        .front-gate-welcome-text {
+            font-family: "ChopinScript", cursive !important;
+            font-weight: 400 !important;
+            color: var(--moss-dark) !important;
+            letter-spacing: 0 !important;
+            text-align: center !important;
+            font-size: clamp(34px, 5.2vw, 48px) !important;
+            line-height: 1.12 !important;
+            max-width: 100% !important;
+            white-space: normal !important;
+        }
+
+        .front-gate-welcome-text .welcome-line {
+            display: block !important;
+            white-space: nowrap !important;
+        }
+
+        @media (max-width: 768px) {
+            .front-gate-welcome-text {
+                font-size: clamp(31px, 9vw, 42px) !important;
+                line-height: 1.08 !important;
+            }
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 120px !important;
+            padding: 22px 20px 24px !important;
+        }
+
+        .front-gate-welcome-wrap {
+            min-height: 76px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .organize-entry-btn.organize-hidden,
+        #organizeEntryBtn[hidden],
+        #mobileToggleOrganize[hidden] {
+            display: none !important;
+        }
+
+    
+
+        /* v52 final Chopin Script layout: semantic logo, contained gate, lighter mobile scale */
+        :root {
+            --logo-green: #5f7f61;
+            --logo-green-mid: #4f704f;
+            --logo-cloud-blue: #4f7590;
+        }
+
+        .title,
+        .front-gate-title,
+        .front-gate-welcome-text {
+            font-family: "ChopinScript", cursive !important;
+            font-weight: 400 !important;
+            letter-spacing: 0 !important;
+            text-align: center !important;
+            color: var(--logo-green-mid) !important;
+            overflow: visible !important;
+            text-wrap: normal !important;
+        }
+
+        .logo-between {
+            color: var(--logo-green) !important;
+        }
+
+        .logo-in-the {
+            color: var(--logo-green-mid) !important;
+        }
+
+        .logo-clouds {
+            color: var(--logo-cloud-blue) !important;
+        }
+
+        .title .logo-line,
+        .front-gate-title .logo-line {
+            white-space: nowrap !important;
+        }
+
+        /* PC main header: one expanded banner, compact spacing, no giant safety gutter */
+        @media (min-width: 769px) {
+            .title {
+                display: block !important;
+                width: min(100%, 900px) !important;
+                max-width: 900px !important;
+                margin: 0 auto 16px !important;
+                padding: 0 18px 14px !important;
+                font-size: clamp(44px, 4.8vw, 70px) !important;
+                line-height: 1.04 !important;
+                white-space: nowrap !important;
+            }
+
+            .title .logo-line {
+                display: inline !important;
+            }
+
+            .title .logo-line + .logo-line::before {
+                content: " " !important;
+            }
+
+            /* Login gate is a card, not a PC banner: keep all flourishes inside the card */
+            .front-gate-card {
+                width: min(92vw, 520px) !important;
+                overflow: hidden !important;
+            }
+
+            .front-gate-title {
+                display: block !important;
+                width: 100% !important;
+                max-width: 360px !important;
+                margin: 0 auto 22px !important;
+                padding: 6px 0 18px !important;
+                font-size: clamp(34px, 4.2vw, 48px) !important;
+                line-height: .88 !important;
+                white-space: normal !important;
+            }
+
+            .front-gate-title .logo-line {
+                display: block !important;
+            }
+
+            .front-gate-title .logo-line + .logo-line::before {
+                content: "" !important;
+            }
+
+            .front-gate-title .logo-in-the {
+                font-size: .78em !important;
+                line-height: .82 !important;
+            }
+        }
+
+        /* Mobile and narrow screens: fixed semantic three-line logo. in the is intentionally smaller. */
+        @media (max-width: 768px) {
+            .front-gate-title,
+            .title {
+                display: block !important;
+                white-space: normal !important;
+            }
+
+            .front-gate-title .logo-line,
+            .title .logo-line {
+                display: block !important;
+                white-space: nowrap !important;
+            }
+
+            .front-gate-title .logo-line + .logo-line::before,
+            .title .logo-line + .logo-line::before {
+                content: "" !important;
+            }
+
+            .front-gate-title {
+                max-width: 250px !important;
+                margin: 0 auto 20px !important;
+                padding: 6px 0 14px !important;
+                font-size: clamp(34px, 10.8vw, 46px) !important;
+                line-height: .82 !important;
+            }
+
+            .title {
+                max-width: 218px !important;
+                margin: 0 auto 18px !important;
+                padding: 2px 0 14px !important;
+                font-size: clamp(30px, 9.2vw, 40px) !important;
+                line-height: .82 !important;
+            }
+
+            body.library-is-open .title {
+                max-width: 180px !important;
+                margin: 0 auto 12px !important;
+                padding: 0 0 10px !important;
+                font-size: clamp(25px, 7.5vw, 32px) !important;
+                line-height: .82 !important;
+            }
+
+            .front-gate-title .logo-in-the,
+            .title .logo-in-the {
+                font-size: .72em !important;
+                line-height: .78 !important;
+            }
+        }
+
+        /* Welcome is a small signature, not a second huge logo */
+        .front-gate-welcome-text {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            font-size: clamp(27px, 4vw, 36px) !important;
+            line-height: 1.18 !important;
+            color: var(--logo-green-mid) !important;
+            white-space: normal !important;
+        }
+
+        .front-gate-welcome-text .welcome-line {
+            display: block !important;
+            white-space: nowrap !important;
+        }
+
+        @media (max-width: 768px) {
+            .front-gate-welcome-text {
+                font-size: clamp(26px, 7.3vw, 33px) !important;
+                line-height: 1.14 !important;
+            }
+        }
+
+        .front-gate-card.gate-welcome-state .front-gate-status {
+            min-height: 112px !important;
+            padding: 22px 20px 24px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* No vine artifacts in the final gate */
+        .front-gate-vine,
+        .front-gate-vine-top,
+        .front-gate-vine-bottom,
+        .front-gate-stem,
+        .front-gate-branch,
+        .front-gate-leaf,
+        .front-gate-vine-line,
+        .front-gate-vine-leaf {
+            display: none !important;
+        }
+
     </style>
 </head>
-<body>
+<body class="gate-locked">
+
+    <div class="front-gate" id="frontGate" role="dialog" aria-modal="true" aria-labelledby="frontGateTitle">
+        <div class="front-gate-card">
+            <h1 class="front-gate-title" id="frontGateTitle"><span class="logo-line logo-between">Between</span><span class="logo-line logo-in-the">in the</span><span class="logo-line logo-clouds">Clouds</span></h1>
+            <div class="front-gate-status" id="frontGateStatus">请输入种子与咒语</div>
+            <div class="front-gate-form">
+                <input type="email" class="front-gate-input" id="frontGateSeed" autocomplete="username" placeholder="种子">
+                <input type="password" class="front-gate-input" id="frontGateSpell" autocomplete="current-password" placeholder="咒语">
+                <button type="button" class="btn-primary front-gate-button" id="frontGateButton" onclick="frontGateLogin()">传送</button>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <main class="main-content">
             <section class="header">
@@ -3532,7 +4880,7 @@
                 <button type="button" class="mobile-top-search-btn" onclick="toggleMobileSearch()" aria-label="搜索">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M16 16l4 4"></path></svg>
                 </button>
-                <h1 class="title">Between in the Clouds</h1>
+                <h1 class="title"><span class="logo-line logo-between">Between</span><span class="logo-line logo-in-the">in the</span><span class="logo-line logo-clouds">Clouds</span></h1>
 
                 <div class="capture-stack">
                     <div class="input-area">
@@ -3555,7 +4903,7 @@
                 <span class="mobile-collapsed-total" id="mobileCollapsedTotal">共 0 条设定</span>
                 <span class="library-toggle-title" id="categoryHeader">全部设定</span>
                 <span class="library-toggle-count" id="totalCount">共 0 条设定</span>
-                <span class="mobile-toggle-organize" id="mobileToggleOrganize" onclick="event.stopPropagation(); enterOrganizeMode();" role="button" aria-label="整理未分类" title="整理未分类">
+                <span class="mobile-toggle-organize" id="mobileToggleOrganize" onclick="event.stopPropagation(); enterOrganizeMode();" role="button" aria-label="整理" title="整理">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M5 7h10"></path>
                         <path d="M5 12h14"></path>
@@ -3586,6 +4934,14 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V10"></path><path d="M8 14l4-4 4 4"></path><path d="M5 6h14"></path></svg>
                             <span>导入</span>
                         </button>
+                        <button type="button" class="mobile-sidebar-tool-btn icon-tool sync-tool" onclick="showSyncModal(); closeMobileCategoryDrawer();" aria-label="同步">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 0 1 11.8-5"></path><path d="M17 3v5h-5"></path><path d="M19 12a7 7 0 0 1-11.8 5"></path><path d="M7 21v-5h5"></path></svg>
+                            <span>同步</span>
+                        </button>
+                        <button type="button" class="mobile-sidebar-tool-btn icon-tool logout-tool" id="mobileLogoutBtn" onclick="syncLogout(); closeMobileCategoryDrawer();" aria-label="登出">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H6.5A2.5 2.5 0 0 0 4 7.5v9A2.5 2.5 0 0 0 6.5 19H9"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H9"></path></svg>
+                            <span>登出</span>
+                        </button>
                     </div>
                     <div class="mobile-sidebar-status" id="mobileSidebarStatus">从未修改</div>
                 </aside>
@@ -3594,9 +4950,21 @@
                     <div class="library-tools">
                         <input type="text" class="search-box" id="searchBox" placeholder="搜索设定内容..." aria-label="搜索设定内容">
                         <div class="library-actions">
-                            <button class="btn-secondary organize-entry-btn" id="organizeEntryBtn" onclick="enterOrganizeMode()">整理</button>
-                            <button class="btn-secondary" onclick="showExportModal()">导出</button>
-                            <button class="btn-secondary" onclick="document.getElementById('importFile').click()">导入</button>
+                            <button class="btn-secondary organize-entry-btn library-icon-btn organize-hidden" id="organizeEntryBtn" onclick="enterOrganizeMode()" aria-label="整理">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"></path><path d="M5 12h14"></path><path d="M5 17h8"></path><circle cx="18" cy="7" r="1.5"></circle><circle cx="18" cy="17" r="1.5"></circle></svg><span>整理</span>
+                            </button>
+                            <button class="btn-secondary library-icon-btn" onclick="showExportModal()" aria-label="导出">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10"></path><path d="M8 10l4 4 4-4"></path><path d="M5 18h14"></path></svg><span>导出</span>
+                            </button>
+                            <button class="btn-secondary library-icon-btn" onclick="document.getElementById('importFile').click()" aria-label="导入">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V10"></path><path d="M8 14l4-4 4 4"></path><path d="M5 6h14"></path></svg><span>导入</span>
+                            </button>
+                            <button class="btn-secondary library-icon-btn" onclick="showSyncModal()" aria-label="同步">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 0 1 11.8-5"></path><path d="M17 3v5h-5"></path><path d="M19 12a7 7 0 0 1-11.8 5"></path><path d="M7 21v-5h5"></path></svg><span>同步</span>
+                            </button>
+                            <button class="btn-secondary library-icon-btn library-logout-btn" id="pcLogoutBtn" onclick="syncLogout()" aria-label="登出">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H6.5A2.5 2.5 0 0 0 4 7.5v9A2.5 2.5 0 0 0 6.5 19H9"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H9"></path></svg><span>登出</span>
+                            </button>
                         </div>
                         <div class="batch-toolbar" id="batchToolbar" aria-live="polite"></div>
                         <input type="file" id="importFile" accept=".txt,.json" onchange="importSettings(event)">
@@ -3656,11 +5024,11 @@
     <div class="modal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
         <div class="modal-content">
             <h3 class="modal-title" id="exportTitle">导出设定</h3>
-            <div class="export-version-status" id="exportVersionStatus">当前版本：从未修改</div>
+            <div class="export-version-status" id="exportVersionStatus"><span class="export-version-time">当前版本：从未修改</span></div>
             <div class="export-options">
                 <div class="export-option" onclick="exportPlainText()" tabindex="0" role="button">
                     <div class="export-option-title">纯文字导出</div>
-                    <div class="export-option-desc">每条设定以空行分隔，适合整理为干净文本</div>
+                    <div class="export-option-desc">按分类分组导出，适合整理为干净文本</div>
                 </div>
                 <div class="export-option" onclick="exportWithCategories()" tabindex="0" role="button">
                     <div class="export-option-title">带分类导出</div>
@@ -3669,6 +5037,36 @@
             </div>
             <div class="modal-buttons" style="margin-top: 16px;">
                 <button class="btn-cancel" style="width: 100%;" onclick="closeModal('exportModal')">取消</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal" id="syncModal" role="dialog" aria-modal="true" aria-labelledby="syncTitle">
+        <div class="modal-content sync-modal-content">
+            <h3 class="modal-title" id="syncTitle">同步</h3>
+            <div class="sync-auth-status" id="syncAuthStatus">未登录</div>
+
+            <div class="sync-login-area" id="syncLoginArea">
+                <input type="email" class="sync-input" id="syncEmail" autocomplete="username" placeholder="种子">
+                <input type="password" class="sync-input" id="syncPassword" autocomplete="current-password" placeholder="咒语">
+                <button class="btn-primary" id="syncLoginBtn" onclick="syncLogin()">传送</button>
+            </div>
+
+            <div class="sync-user-area" id="syncUserArea" style="display: none;">
+                <div class="sync-user-label" id="syncUserLabel"></div>
+                <div class="sync-actions">
+                    <button class="btn-primary sync-action-btn" id="syncUploadBtn" onclick="uploadLocalToCloud()"><span class="sync-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 19V5"></path><path d="M6.5 10.5 12 5l5.5 5.5"></path><path d="M5 20h14"></path></svg></span><span>上传</span></button>
+                    <button class="btn-secondary sync-action-btn" id="syncPullBtn" onclick="pullFromCloud()"><span class="sync-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M6.5 13.5 12 19l5.5-5.5"></path><path d="M5 20h14"></path></svg></span><span>下载</span></button>
+                    <button class="btn-secondary sync-action-btn" id="syncStatusBtn" onclick="showCloudSyncStatus()"><span class="sync-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-13.4 5.9"></path><path d="M4 12A8 8 0 0 1 17.4 6.1"></path><path d="M17 2.8v3.6h3.6"></path><path d="M7 21.2v-3.6H3.4"></path></svg></span><span>状态</span></button>
+                </div>
+            </div>
+
+            <div class="sync-detail-card" id="syncStatusDetails" style="display: none;"></div>
+
+            <div class="modal-buttons" style="margin-top: 16px;">
+                <button class="btn-cancel" style="width: 100%;" onclick="closeModal('syncModal')">关闭</button>
             </div>
         </div>
     </div>
@@ -3700,6 +5098,31 @@
         let similarCandidateContent = '';
         let organizeMode = false;
         let batchSelectedIds = new Set();
+
+        // v44 sync v1: Firebase 手动云同步配置。这里只有项目连接信息，不包含登录密码或服务账号私钥。
+        const firebaseConfig = {
+            apiKey: "AIzaSyACPP_RdlH7IGq1s47HOUNc1elKRe3uFzc",
+            authDomain: "between-in-the-clouds.firebaseapp.com",
+            projectId: "between-in-the-clouds",
+            storageBucket: "between-in-the-clouds.firebasestorage.app",
+            messagingSenderId: "203243612523",
+            appId: "1:203243612523:web:62bd899084a90edff8442e"
+        };
+
+        const SYNC_ALLOWED_UID = 'wmPSDtgM6ROBY6V4W1LeGbRHTVp1';
+        const SYNC_DOC_PATH = `users/${SYNC_ALLOWED_UID}/libraries/main`;
+        const FIREBASE_SDK_URLS = [
+            'https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js',
+            'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js',
+            'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js'
+        ];
+        let firebaseSyncAvailable = false;
+        let firebaseSyncInitPromise = null;
+        let syncAuth = null;
+        let syncDb = null;
+        let syncCurrentUser = null;
+        let syncBusy = false;
+        let syncLastCloudSummary = null;
         
         // 生成内容哈希（简单版本）
         function generateHash(text) {
@@ -3743,6 +5166,31 @@
 
         function getNowString() {
             return new Date().toLocaleString('zh-CN');
+        }
+
+        function formatIsoForDevice(isoString) {
+            if (!isoString) return '';
+            const date = new Date(isoString);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString('zh-CN');
+        }
+
+        function formatCloudTimestampForDevice(value) {
+            if (!value) return '';
+            let date = null;
+
+            if (typeof value.toDate === 'function') {
+                date = value.toDate();
+            } else if (value instanceof Date) {
+                date = value;
+            } else if (typeof value === 'string') {
+                date = new Date(value);
+            } else if (typeof value.seconds === 'number') {
+                date = new Date(value.seconds * 1000 + Math.floor((value.nanoseconds || 0) / 1000000));
+            }
+
+            if (!date || Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString('zh-CN');
         }
 
         async function ensureVersionState() {
@@ -3837,6 +5285,22 @@
             return currentCategory === getDefaultCategory();
         }
 
+        function getSearchTerm() {
+            return (document.getElementById('searchBox')?.value || '').trim().toLowerCase();
+        }
+
+        function isEditingAnySetting() {
+            return !!document.querySelector('.setting-item.editing');
+        }
+
+        function canOrganizeCurrentView(visibleCount = 0) {
+            return currentCategory !== 'all' && !getSearchTerm() && visibleCount > 0 && !isEditingAnySetting();
+        }
+
+        function getBatchMoveTargets() {
+            return categories.filter(cat => cat !== currentCategory);
+        }
+
         function exitOrganizeMode() {
             organizeMode = false;
             batchSelectedIds.clear();
@@ -3845,7 +5309,17 @@
         }
 
         function enterOrganizeMode() {
-            if (!isUncategorizedView()) return;
+            const visibleCount = currentCategory === 'all'
+                ? 0
+                : settings.filter(s => s.category === currentCategory).length;
+
+            if (!canOrganizeCurrentView(visibleCount)) {
+                if (isEditingAnySetting()) {
+                    showToast('请先完成当前编辑', 'warning');
+                }
+                return;
+            }
+
             organizeMode = true;
             batchSelectedIds.clear();
             renderSettings();
@@ -3883,30 +5357,40 @@
             const toolbar = document.getElementById('batchToolbar');
             if (!entryBtn || !toolbar) return;
 
-            const canOrganize = isUncategorizedView() && visibleCount > 0;
-            entryBtn.style.display = canOrganize && !organizeMode ? 'inline-flex' : 'none';
-            if (mobileEntry) {
-                mobileEntry.classList.toggle('active', canOrganize && !organizeMode);
+            const canOrganize = canOrganizeCurrentView(visibleCount);
+            const showEntryButton = canOrganize && !organizeMode;
+            entryBtn.classList.toggle('organize-hidden', !showEntryButton);
+            entryBtn.hidden = !showEntryButton;
+            entryBtn.disabled = !showEntryButton;
+            if (showEntryButton) {
+                entryBtn.style.removeProperty('display');
+            } else {
+                entryBtn.style.setProperty('display', 'none', 'important');
             }
-            document.body.classList.toggle('mobile-organize-active', organizeMode && isUncategorizedView());
+            if (mobileEntry) {
+                mobileEntry.classList.toggle('active', showEntryButton);
+                mobileEntry.hidden = !showEntryButton;
+                mobileEntry.setAttribute('aria-hidden', showEntryButton ? 'false' : 'true');
+            }
+            document.body.classList.toggle('mobile-organize-active', organizeMode && canOrganize);
 
-            if (!organizeMode || !isUncategorizedView()) {
+            if (!organizeMode || !canOrganize) {
                 toolbar.classList.remove('active');
                 toolbar.innerHTML = '';
                 document.body.classList.remove('mobile-organize-active');
                 return;
             }
 
-            const targets = categories.filter(cat => cat !== getDefaultCategory());
+            const targets = getBatchMoveTargets();
             const targetHtml = targets.length
-                ? `<span class="batch-move-label">移动到</span><div class="batch-category-strip">${targets.map(cat => `<button type="button" class="batch-category-btn" onclick="moveSelectedToCategory('${escapeJs(cat)}')">${escapeHtml(cat)}</button>`).join('')}</div>`
+                ? `<div class="batch-category-strip" aria-label="移动到分类">${targets.map(cat => `<button type="button" class="batch-category-btn" onclick="moveSelectedToCategory('${escapeJs(cat)}')">${escapeHtml(cat)}</button>`).join('')}</div>`
                 : '<span class="batch-empty-target">暂无可移动分类</span>';
 
             toolbar.classList.add('active');
             toolbar.innerHTML = `
                 <span class="batch-status">已选 ${batchSelectedIds.size} 条</span>
+                <button type="button" class="batch-cancel-btn" onclick="exitOrganizeMode()">完成</button>
                 ${targetHtml}
-                <button type="button" class="batch-cancel-btn" onclick="exitOrganizeMode()">退出</button>
             `;
         }
 
@@ -3945,10 +5429,8 @@
         // 切换分类
         function switchCategory(category) {
             currentCategory = category;
-            if (!isUncategorizedView()) {
-                organizeMode = false;
-                batchSelectedIds.clear();
-            }
+            organizeMode = false;
+            batchSelectedIds.clear();
             closeMobileCategoryDrawer();
             closeMobileInlineActions();
             renderCategories();
@@ -4069,13 +5551,23 @@
             `;
         }
 
+        function closeAllCategoryPickers(exceptId = null) {
+            document.querySelectorAll('.edit-category-picker.open').forEach(picker => {
+                if (exceptId && picker.id === exceptId) return;
+                picker.classList.remove('open');
+                picker.closest('.setting-item')?.classList.remove('category-menu-open');
+            });
+        }
+
         function toggleCategoryPicker(event, id) {
             event.stopPropagation();
-            document.querySelectorAll('.edit-category-picker.open').forEach(picker => {
-                if (picker.id !== `category-picker-${id}`) picker.classList.remove('open');
-            });
-            const picker = document.getElementById(`category-picker-${id}`);
-            if (picker) picker.classList.toggle('open');
+            const pickerId = `category-picker-${id}`;
+            closeAllCategoryPickers(pickerId);
+            const picker = document.getElementById(pickerId);
+            if (!picker) return;
+            const willOpen = !picker.classList.contains('open');
+            picker.classList.toggle('open', willOpen);
+            picker.closest('.setting-item')?.classList.toggle('category-menu-open', willOpen);
         }
 
         function selectEditCategory(event, id, category) {
@@ -4089,6 +5581,7 @@
                 option.classList.toggle('active', option.textContent === category);
             });
             picker.classList.remove('open');
+            picker.closest('.setting-item')?.classList.remove('category-menu-open');
         }
 
         // 渲染设定列表
@@ -4114,7 +5607,7 @@
                 );
             }
 
-            if (!isUncategorizedView()) {
+            if (currentCategory === 'all' || searchTerm || isEditingAnySetting()) {
                 organizeMode = false;
                 batchSelectedIds.clear();
             }
@@ -4527,7 +6020,8 @@
             await ensureVersionState();
             const status = document.getElementById('exportVersionStatus');
             if (status) {
-                status.textContent = `当前版本：${lastModified ? lastModified.time : '从未修改'} · ${settings.length} 条 · ${categories.length} 个分类`;
+                const versionText = lastModified ? lastModified.time : '从未修改';
+                status.innerHTML = `<span class="export-version-time">当前版本：${escapeHtml(versionText)}</span><span class="export-version-counts">${settings.length} 条 · ${categories.length} 个分类</span>`;
             }
             document.getElementById('exportModal').classList.add('active');
         }
@@ -4546,9 +6040,22 @@
             return `BetweenInTheClouds_${type}_${formatExportTimestamp()}.${type}`;
         }
 
-        // 纯文字导出
+        // 纯文字导出：按分类顺序分组
         function exportPlainText() {
-            const text = settings.map(s => s.content).join('\n\n');
+            const sections = [];
+            categories.forEach(category => {
+                const items = settings.filter(setting => setting.category === category);
+                if (!items.length) return;
+                sections.push(`【${category}】\n\n${items.map(item => item.content).join('\n\n')}`);
+            });
+
+            const knownCategories = new Set(categories);
+            const extraItems = settings.filter(setting => !knownCategories.has(setting.category));
+            if (extraItems.length) {
+                sections.push(`【未分类】\n\n${extraItems.map(item => item.content).join('\n\n')}`);
+            }
+
+            const text = sections.join('\n\n');
             downloadFile(text, getExportFilename('txt'));
             closeModal('exportModal');
             showToast('已导出当前版本', 'success');
@@ -4556,6 +6063,11 @@
         
         // 带分类导出
         async function exportWithCategories() {
+            if (settings.length === 0) {
+                showToast('当前设定为空，无法导出。', 'warning');
+                return;
+            }
+
             await ensureVersionState();
             const data = {
                 settings: settings,
@@ -4573,15 +6085,25 @@
             showToast('已导出当前版本', 'success');
         }
 
+        function getMimeTypeForFilename(filename) {
+            const lower = String(filename || '').toLowerCase();
+            if (lower.endsWith('.json')) return 'application/json;charset=utf-8';
+            if (lower.endsWith('.txt')) return 'text/plain;charset=utf-8';
+            return 'application/octet-stream';
+        }
+
         // 下载文件
         function downloadFile(content, filename) {
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const blob = new Blob([content], { type: getMimeTypeForFilename(filename) });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = filename;
+            a.style.display = 'none';
+            document.body.appendChild(a);
             a.click();
-            URL.revokeObjectURL(url);
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
         
         let customConfirmResolver = null;
@@ -4605,9 +6127,11 @@
                 cancel.textContent = options.cancelText || '取消';
 
                 modal.classList.add('active');
+                updateGlobalModalState();
 
                 customConfirmResolver = value => {
                     modal.classList.remove('active');
+                    updateGlobalModalState();
                     customConfirmResolver = null;
                     resolve(value);
                 };
@@ -4626,7 +6150,7 @@
         async function formatImportConfirmHtml(importInfo) {
             const current = await ensureVersionState();
             return `
-                <div class="confirm-warning">这会覆盖当前全部设定库。</div>
+                <div class="confirm-warning">这会替换当前全部设定。</div>
                 <div class="confirm-compare">
                     <div class="confirm-card">
                         <div class="confirm-card-title">导入版本</div>
@@ -4678,6 +6202,837 @@
             });
         }
 
+
+
+        function updateGlobalModalState() {
+            const hasActiveModal = Boolean(document.querySelector('.modal.active'));
+            document.body.classList.toggle('modal-open', hasActiveModal);
+            if (typeof updateMobileScrollBottomVisibility === 'function') {
+                updateMobileScrollBottomVisibility();
+            }
+        }
+
+        function bindGlobalModalStateObserver() {
+            const modals = document.querySelectorAll('.modal');
+            if (!modals.length || typeof MutationObserver === 'undefined') {
+                updateGlobalModalState();
+                return;
+            }
+            const observer = new MutationObserver(updateGlobalModalState);
+            modals.forEach(modal => observer.observe(modal, { attributes: true, attributeFilter: ['class'] }));
+            updateGlobalModalState();
+        }
+
+
+        function setFrontGateStatus(message = '请输入种子与咒语', type = '') {
+            const status = document.getElementById('frontGateStatus');
+            if (!status) return;
+            status.classList.toggle('error', type === 'error');
+            status.classList.toggle('welcome', type === 'welcome');
+
+            if (type === 'welcome') {
+                const welcomeHtml = message === 'Welcome home, mouselet'
+                    ? `<span class="welcome-line">Welcome home,</span><span class="welcome-line">mouselet</span>`
+                    : `<span class="welcome-line">${escapeHtml(message)}</span>`;
+                status.innerHTML = `
+                    <div class="front-gate-welcome-wrap">
+                        <div class="front-gate-welcome-text">${welcomeHtml}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            status.textContent = message;
+        }
+
+        function setFrontGateBusy(isBusy, message = '') {
+            const button = document.getElementById('frontGateButton');
+            const seed = document.getElementById('frontGateSeed');
+            const spell = document.getElementById('frontGateSpell');
+            [button, seed, spell].forEach(el => {
+                if (el) el.disabled = isBusy;
+            });
+            if (button) button.textContent = isBusy ? '传送中…' : '传送';
+            if (message) setFrontGateStatus(message);
+        }
+
+        function bindFrontGateInputEvents() {
+            const seed = document.getElementById('frontGateSeed');
+            const spell = document.getElementById('frontGateSpell');
+            [seed, spell].forEach(input => {
+                if (!input || input.dataset.gateBound === 'true') return;
+                input.dataset.gateBound = 'true';
+                input.addEventListener('keydown', event => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        frontGateLogin();
+                    }
+                });
+            });
+        }
+
+        function waitForAuthStateOnce(timeoutMs = 4500) {
+            return new Promise(resolve => {
+                if (!syncAuth) {
+                    resolve(null);
+                    return;
+                }
+
+                let settled = false;
+                let unsubscribe = null;
+                const finish = user => {
+                    if (settled) return;
+                    settled = true;
+                    if (timer) window.clearTimeout(timer);
+                    if (typeof unsubscribe === 'function') unsubscribe();
+                    syncCurrentUser = user || syncAuth.currentUser || null;
+                    resolve(syncCurrentUser);
+                };
+
+                const timer = window.setTimeout(() => finish(syncAuth.currentUser || null), timeoutMs);
+                unsubscribe = syncAuth.onAuthStateChanged(user => finish(user));
+            });
+        }
+
+        async function unlockFrontGate(showWelcome = true) {
+            const body = document.body;
+            if (!body || body.classList.contains('gate-unlocked')) return;
+            const gateCard = document.querySelector('.front-gate-card');
+
+            if (showWelcome) {
+                gateCard?.classList.add('gate-welcome-state');
+                setFrontGateStatus('Welcome home, mouselet', 'welcome');
+                await new Promise(resolve => window.setTimeout(resolve, 2050));
+            }
+
+            body.classList.remove('gate-locked');
+            body.classList.add('gate-unlocked');
+            updateSyncUi();
+        }
+
+        function lockFrontGate(message = '请输入种子与咒语') {
+            const body = document.body;
+            document.querySelector('.front-gate-card')?.classList.remove('gate-welcome-state');
+            if (!body) return;
+            body.classList.add('gate-locked');
+            body.classList.remove('gate-unlocked');
+            setFrontGateBusy(false);
+            setFrontGateStatus(message);
+            const spell = document.getElementById('frontGateSpell');
+            if (spell) spell.value = '';
+            window.setTimeout(() => document.getElementById('frontGateSeed')?.focus(), 80);
+        }
+
+        async function initializeFrontGate() {
+            bindFrontGateInputEvents();
+            setFrontGateStatus('正在确认门钥匙……');
+
+            try {
+                await ensureFirebaseSyncReady();
+                const user = await waitForAuthStateOnce();
+                if (user && isAllowedSyncUser()) {
+                    await unlockFrontGate(true);
+                    return;
+                }
+
+                if (user && !isAllowedSyncUser()) {
+                    await syncAuth.signOut();
+                    syncCurrentUser = null;
+                    setFrontGateStatus('You shall not pass!', 'error');
+                    return;
+                }
+
+                setFrontGateStatus('请输入种子与咒语');
+                window.setTimeout(() => document.getElementById('frontGateSeed')?.focus(), 80);
+            } catch (error) {
+                setFrontGateStatus(getFriendlyFirebaseError(error), 'error');
+            }
+        }
+
+        async function frontGateLogin() {
+            try {
+                await ensureFirebaseSyncReady();
+                const seed = document.getElementById('frontGateSeed')?.value.trim();
+                const spell = document.getElementById('frontGateSpell')?.value;
+
+                if (!seed || !spell) {
+                    setFrontGateStatus('请输入种子与咒语。', 'error');
+                    return;
+                }
+
+                setFrontGateBusy(true, '门钥匙传送中……');
+                await syncAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                const result = await syncAuth.signInWithEmailAndPassword(seed, spell);
+                syncCurrentUser = result.user;
+
+                if (!isAllowedSyncUser()) {
+                    await syncAuth.signOut();
+                    syncCurrentUser = null;
+                    setFrontGateStatus('You shall not pass!', 'error');
+                    return;
+                }
+
+                const spellInput = document.getElementById('frontGateSpell');
+                if (spellInput) spellInput.value = '';
+                setFrontGateBusy(false);
+                await unlockFrontGate(true);
+            } catch (error) {
+                setFrontGateStatus(getFriendlyFirebaseError(error), 'error');
+            } finally {
+                if (document.body.classList.contains('gate-locked')) {
+                    setFrontGateBusy(false);
+                }
+            }
+        }
+
+        function showSyncHomeWelcome() {
+            const status = document.getElementById('syncAuthStatus');
+            if (!status) return;
+            status.textContent = 'Welcome home, mouselet';
+            status.classList.remove('sync-home-glow');
+            void status.offsetWidth;
+            status.classList.add('sync-home-glow');
+            window.clearTimeout(showSyncHomeWelcome.timer);
+            showSyncHomeWelcome.timer = window.setTimeout(() => {
+                status.classList.remove('sync-home-glow');
+                if (syncCurrentUser) updateSyncUi();
+            }, 2100);
+        }
+
+        function loadExternalScript(src) {
+            return new Promise((resolve, reject) => {
+                const existing = document.querySelector(`script[src="${src}"]`);
+                if (existing) {
+                    if (existing.dataset.loaded === 'true') {
+                        resolve();
+                    } else {
+                        existing.addEventListener('load', resolve, { once: true });
+                        existing.addEventListener('error', () => reject(new Error(`无法加载 ${src}`)), { once: true });
+                    }
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = src;
+                script.async = false;
+                script.dataset.loaded = 'false';
+                script.onload = () => {
+                    script.dataset.loaded = 'true';
+                    resolve();
+                };
+                script.onerror = () => reject(new Error(`无法加载 ${src}`));
+                document.head.appendChild(script);
+            });
+        }
+
+        async function loadFirebaseSdk() {
+            if (window.firebase && firebase.auth && firebase.firestore) return;
+            for (const src of FIREBASE_SDK_URLS) {
+                await loadExternalScript(src);
+            }
+        }
+
+        async function ensureFirebaseSyncReady() {
+            if (firebaseSyncAvailable && syncAuth && syncDb) return true;
+            if (firebaseSyncInitPromise) return firebaseSyncInitPromise;
+
+            firebaseSyncInitPromise = (async () => {
+                updateSyncUi('正在连接 Firebase 同步服务...');
+                await loadFirebaseSdk();
+
+                if (!window.firebase) {
+                    throw new Error('Firebase SDK 未加载');
+                }
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+
+                syncAuth = firebase.auth();
+                syncDb = firebase.firestore();
+                firebaseSyncAvailable = true;
+
+                try {
+                    await syncAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                } catch (error) {
+                    console.warn('Firebase persistence setup failed:', error);
+                }
+
+                syncAuth.onAuthStateChanged(user => {
+                    syncCurrentUser = user;
+                    updateSyncUi();
+                    const modalOpen = document.getElementById('syncModal')?.classList.contains('active');
+                    if (modalOpen && isAllowedSyncUser()) {
+                        showCloudSyncStatus(false).catch(error => console.warn(error));
+                    }
+                });
+
+                bindSyncInputEvents();
+                updateSyncUi();
+                return true;
+            })().catch(error => {
+                firebaseSyncAvailable = false;
+                firebaseSyncInitPromise = null;
+                updateSyncUi('Firebase 连接失败。本地设定仍可继续使用。');
+                updateSyncDetailsHtml(`
+                    <div class="sync-detail-title">连接失败</div>
+                    <div>${escapeHtml(getFriendlyFirebaseError(error))}</div>
+                `);
+                throw error;
+            });
+
+            return firebaseSyncInitPromise;
+        }
+
+        function bindSyncInputEvents() {
+            const email = document.getElementById('syncEmail');
+            const password = document.getElementById('syncPassword');
+            [email, password].forEach(input => {
+                if (!input || input.dataset.syncBound === 'true') return;
+                input.dataset.syncBound = 'true';
+                input.addEventListener('keydown', event => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        syncLogin();
+                    }
+                });
+            });
+        }
+
+        function showSyncModal() {
+            const modal = document.getElementById('syncModal');
+            if (!modal) return;
+            modal.classList.add('active');
+            updateGlobalModalState();
+            updateSyncUi();
+            bindSyncInputEvents();
+            ensureFirebaseSyncReady().catch(error => {
+                showToast(getFriendlyFirebaseError(error), 'danger');
+            });
+        }
+
+        function isAllowedSyncUser() {
+            return Boolean(syncCurrentUser && syncCurrentUser.uid === SYNC_ALLOWED_UID);
+        }
+
+        function setSyncBusy(isBusy, message = '') {
+            syncBusy = isBusy;
+            const ids = ['syncLoginBtn', 'syncUploadBtn', 'syncPullBtn', 'syncStatusBtn', 'mobileLogoutBtn', 'pcLogoutBtn'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = isBusy;
+            });
+            if (message) updateSyncUi(message);
+        }
+
+        function updateSyncUi(message = '') {
+            const status = document.getElementById('syncAuthStatus');
+            const loginArea = document.getElementById('syncLoginArea');
+            const userArea = document.getElementById('syncUserArea');
+            const userLabel = document.getElementById('syncUserLabel');
+            const uploadBtn = document.getElementById('syncUploadBtn');
+            const pullBtn = document.getElementById('syncPullBtn');
+            const statusBtn = document.getElementById('syncStatusBtn');
+
+            if (!status || !loginArea || !userArea) return;
+
+            if (message) {
+                status.textContent = message;
+            } else if (!firebaseSyncAvailable) {
+                status.textContent = '未连接';
+            } else if (!syncCurrentUser) {
+                status.textContent = '未登录';
+            } else if (!isAllowedSyncUser()) {
+                status.textContent = 'You shall not pass!';
+            } else {
+                status.textContent = '已回到云上 Between';
+            }
+
+            const hasUser = Boolean(syncCurrentUser);
+            loginArea.style.display = hasUser ? 'none' : 'grid';
+            userArea.style.display = hasUser ? 'grid' : 'none';
+
+            if (userLabel) {
+                if (!hasUser) {
+                    userLabel.textContent = '';
+                } else if (isAllowedSyncUser()) {
+                    userLabel.textContent = '已回到云上 Between';
+                } else {
+                    userLabel.textContent = 'You shall not pass!';
+                }
+            }
+
+            const canSync = firebaseSyncAvailable && isAllowedSyncUser() && !syncBusy;
+            [uploadBtn, pullBtn, statusBtn].forEach(btn => {
+                if (btn) btn.disabled = !canSync;
+            });
+        }
+
+        function updateSyncDetailsHtml(html) {
+            const details = document.getElementById('syncStatusDetails');
+            if (!details) return;
+            details.innerHTML = html || '';
+            details.style.display = html ? 'block' : 'none';
+        }
+
+        async function syncLogin() {
+            let loginCompleted = false;
+            try {
+                await ensureFirebaseSyncReady();
+                const email = document.getElementById('syncEmail')?.value.trim();
+                const password = document.getElementById('syncPassword')?.value;
+
+                if (!email || !password) {
+                    showToast('请输入种子与咒语', 'warning');
+                    return;
+                }
+
+                setSyncBusy(true, '门钥匙传送中……');
+                await syncAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                const result = await syncAuth.signInWithEmailAndPassword(email, password);
+                syncCurrentUser = result.user;
+
+                if (!isAllowedSyncUser()) {
+                    await syncAuth.signOut();
+                    syncCurrentUser = null;
+                    updateSyncUi('You shall not pass!');
+                    updateSyncDetailsHtml(`
+                        <div class="sync-detail-title">登录失败</div>
+                        <div>You shall not pass!</div>
+                    `);
+                    return;
+                }
+
+                const passwordInput = document.getElementById('syncPassword');
+                if (passwordInput) passwordInput.value = '';
+                setSyncBusy(false);
+                await showCloudSyncStatus(false);
+                showSyncHomeWelcome();
+                loginCompleted = true;
+            } catch (error) {
+                updateSyncUi('登录失败');
+                updateSyncDetailsHtml(`
+                    <div class="sync-detail-title">登录失败</div>
+                    <div>${escapeHtml(getFriendlyFirebaseError(error))}</div>
+                `);
+            } finally {
+                if (!loginCompleted) {
+                    setSyncBusy(false);
+                    if (!syncCurrentUser) updateSyncUi();
+                }
+            }
+        }
+
+        async function syncLogout() {
+            if (!syncAuth) return;
+            try {
+                setSyncBusy(true, '正在登出...');
+                await syncAuth.signOut();
+                syncCurrentUser = null;
+                syncLastCloudSummary = null;
+                updateSyncDetailsHtml('');
+                showToast('已登出', 'success');
+                lockFrontGate('已登出，请重新传送。');
+                closeModal('syncModal');
+            } catch (error) {
+                showToast(getFriendlyFirebaseError(error), 'danger');
+            } finally {
+                setSyncBusy(false);
+                updateSyncUi();
+            }
+        }
+
+        async function assertSyncReadyAndAllowed() {
+            await ensureFirebaseSyncReady();
+            if (!syncCurrentUser) {
+                showToast('请先登录。', 'warning');
+                throw new Error('not signed in');
+            }
+            if (!isAllowedSyncUser()) {
+                showToast('You shall not pass!', 'danger');
+                throw new Error('wrong sync user');
+            }
+        }
+
+        async function getLocalSyncSummary() {
+            const current = await ensureVersionState();
+            return {
+                label: '本地版本',
+                exists: true,
+                versionTime: current ? current.time : '从未修改',
+                contentHash: current ? current.hash : await calculateContentHash(),
+                settingsCount: settings.length,
+                categoriesCount: categories.length,
+                syncUpdatedAt: '尚未上传',
+                syncUpdatedAtISO: '',
+                schemaVersion: 'local'
+            };
+        }
+
+        async function buildLocalSyncPayload() {
+            const summary = await getLocalSyncSummary();
+            const now = new Date();
+            return {
+                settings: settings,
+                categories: categories,
+                lastModified: lastModified,
+                versionHistory: versionHistory,
+                contentHash: summary.contentHash,
+                versionTime: summary.versionTime,
+                exportTime: now.toLocaleString('zh-CN'),
+                syncUpdatedAt: now.toLocaleString('zh-CN'),
+                syncUpdatedAtISO: now.toISOString(),
+                syncUpdatedAtServer: firebase.firestore.FieldValue.serverTimestamp(),
+                schemaVersion: 'v48-front-gate',
+                savedBy: SYNC_ALLOWED_UID
+            };
+        }
+
+        function getSummaryFromCloudData(data) {
+            if (!data) {
+                return {
+                    label: '云端版本',
+                    exists: false,
+                    versionTime: '云端暂无数据',
+                    contentHash: '无',
+                    settingsCount: 0,
+                    categoriesCount: 0,
+                    syncUpdatedAt: '从未上传',
+                    syncUpdatedAtISO: '',
+                    schemaVersion: 'none'
+                };
+            }
+
+            return {
+                label: '云端版本',
+                exists: true,
+                versionTime: data.versionTime || data.lastModified?.versionTime || data.lastModified?.time || '未知',
+                contentHash: data.contentHash || data.lastModified?.contentHash || data.lastModified?.hash || '未知',
+                settingsCount: Array.isArray(data.settings) ? data.settings.length : 0,
+                categoriesCount: Array.isArray(data.categories) ? data.categories.length : 0,
+                syncUpdatedAt: formatCloudTimestampForDevice(data.syncUpdatedAtServer)
+                    || formatIsoForDevice(data.syncUpdatedAtISO)
+                    || data.syncUpdatedAt
+                    || data.exportTime
+                    || '未知',
+                syncUpdatedAtISO: data.syncUpdatedAtISO || '',
+                schemaVersion: data.schemaVersion || 'unknown'
+            };
+        }
+
+        async function fetchCloudLibrary() {
+            await assertSyncReadyAndAllowed();
+            const snapshot = await syncDb.doc(SYNC_DOC_PATH).get();
+            if (!snapshot.exists) {
+                syncLastCloudSummary = getSummaryFromCloudData(null);
+                return { exists: false, data: null, summary: syncLastCloudSummary };
+            }
+
+            const data = snapshot.data();
+            const summary = getSummaryFromCloudData(data);
+            syncLastCloudSummary = summary;
+            return { exists: true, data, summary };
+        }
+
+        function formatSyncSummaryBlock(title, summary) {
+            return `
+                <div class="sync-compare-card">
+                    <div class="sync-compare-title">${escapeHtml(title)}</div>
+                    <div class="sync-compare-line"><span>版本时间</span><strong>${escapeHtml(summary.versionTime)}</strong></div>
+                    <div class="sync-compare-line"><span>条目</span><strong>${summary.settingsCount} 条</strong></div>
+                    <div class="sync-compare-line"><span>分类</span><strong>${summary.categoriesCount} 个</strong></div>
+                    <div class="sync-compare-line"><span>同步时间</span><strong>${escapeHtml(summary.syncUpdatedAt)}</strong></div>
+                </div>
+            `;
+        }
+
+        function formatSyncCompareHtml(note, localSummary, cloudSummary) {
+            const sameHash = localSummary.contentHash && cloudSummary.contentHash && localSummary.contentHash === cloudSummary.contentHash;
+            const relation = sameHash ? '本地与云端内容一致。' : '本地与云端不同，请确认是否继续。';
+            return `
+                <div class="sync-compare-note">${escapeHtml(note)}<br>${escapeHtml(relation)}</div>
+                <div class="sync-compare-grid">
+                    ${formatSyncSummaryBlock('本地版本', localSummary)}
+                    ${formatSyncSummaryBlock('云端版本', cloudSummary)}
+                </div>
+            `;
+        }
+
+        function formatLessOverMoreHtml(sourceLabel, sourceCount, targetLabel, targetCount, actionLabel, targetShortLabel) {
+            const diff = Math.max(0, targetCount - sourceCount);
+            return `
+                <div class="confirm-warning">${escapeHtml(sourceLabel)}：${sourceCount} 条<br>${escapeHtml(targetLabel)}：${targetCount} 条<br><br>这次${escapeHtml(actionLabel)}会让${escapeHtml(targetShortLabel)}减少 ${diff} 条设定。</div>
+            `;
+        }
+
+        async function confirmLessOverMoreIfNeeded({ sourceLabel, sourceCount, targetLabel, targetCount, actionLabel, targetShortLabel, okText }) {
+            if (sourceCount >= targetCount) return true;
+            return await showPrettyConfirm({
+                title: `确认继续${actionLabel}？`,
+                html: formatLessOverMoreHtml(sourceLabel, sourceCount, targetLabel, targetCount, actionLabel, targetShortLabel),
+                okText: okText || `继续${actionLabel}`,
+                cancelText: '取消',
+                fallbackMessage: `${sourceLabel}：${sourceCount} 条
+${targetLabel}：${targetCount} 条
+
+这次${actionLabel}会让${targetShortLabel}减少 ${targetCount - sourceCount} 条设定。`
+            });
+        }
+
+        async function uploadLocalToCloud() {
+            try {
+                await assertSyncReadyAndAllowed();
+                setSyncBusy(true, '正在读取云端状态...');
+                const localSummary = await getLocalSyncSummary();
+
+                if (localSummary.settingsCount === 0) {
+                    updateSyncDetailsHtml('');
+                    showToast('本地版本为空，已阻止上传。', 'warning');
+                    return;
+                }
+
+                const cloud = await fetchCloudLibrary();
+                const cloudSummary = cloud.summary;
+
+                if (cloud.exists && localSummary.contentHash === cloudSummary.contentHash) {
+                    updateSyncDetailsHtml(buildSyncStatusHtml(localSummary, cloudSummary));
+                    showToast('本地与云端已经一致', 'success');
+                    return;
+                }
+
+                setSyncBusy(false);
+                const confirmed = await showPrettyConfirm({
+                    title: cloud.exists ? '上传到云端' : '首次上传到云端',
+                    html: formatSyncCompareHtml(cloud.exists ? '这会用本地版本替换云端版本。' : '这会把本地版本保存为云端版本。', localSummary, cloudSummary),
+                    okText: cloud.exists ? '上传本地版本' : '上传',
+                    cancelText: '取消',
+                    fallbackMessage: '是否上传本地版本？'
+                });
+
+                if (!confirmed) return;
+
+                if (cloud.exists) {
+                    const lessConfirmed = await confirmLessOverMoreIfNeeded({
+                        sourceLabel: '本地版本',
+                        sourceCount: localSummary.settingsCount,
+                        targetLabel: '云端版本',
+                        targetCount: cloudSummary.settingsCount,
+                        actionLabel: '上传',
+                        targetShortLabel: '云端',
+                        okText: '继续上传'
+                    });
+                    if (!lessConfirmed) return;
+                }
+
+                setSyncBusy(true, '正在上传本地版本...');
+                const payload = await buildLocalSyncPayload();
+                await syncDb.doc(SYNC_DOC_PATH).set(payload);
+                const refreshedCloud = await fetchCloudLibrary();
+                updateSyncDetailsHtml(buildSyncStatusHtml(await getLocalSyncSummary(), refreshedCloud.summary));
+                showToast('已上传到云端', 'success');
+            } catch (error) {
+                if (error && ['not signed in', 'wrong sync user'].includes(error.message)) return;
+                showToast(getFriendlyFirebaseError(error), 'danger');
+                updateSyncDetailsHtml(`
+                    <div class="sync-detail-title">上传失败</div>
+                    <div>${escapeHtml(getFriendlyFirebaseError(error))}</div>
+                `);
+            } finally {
+                setSyncBusy(false);
+                updateSyncUi();
+            }
+        }
+
+        async function pullFromCloud() {
+            try {
+                await assertSyncReadyAndAllowed();
+                setSyncBusy(true, '正在读取云端版本...');
+                const cloud = await fetchCloudLibrary();
+
+                if (!cloud.exists || cloud.summary.settingsCount === 0) {
+                    updateSyncDetailsHtml('');
+                    showToast('云端版本为空，已阻止下载。', 'warning');
+                    return;
+                }
+
+                const localSummary = await getLocalSyncSummary();
+                const cloudSummary = cloud.summary;
+
+                if (localSummary.contentHash === cloudSummary.contentHash) {
+                    updateSyncDetailsHtml(buildSyncStatusHtml(localSummary, cloudSummary));
+                    showToast('本地与云端已经一致', 'success');
+                    return;
+                }
+
+                setSyncBusy(false);
+                const confirmed = await showPrettyConfirm({
+                    title: '下载云端版本',
+                    html: formatSyncCompareHtml('这会用云端版本替换本地版本。', localSummary, cloudSummary),
+                    okText: '下载云端版本',
+                    cancelText: '取消',
+                    fallbackMessage: '是否下载云端版本？'
+                });
+
+                if (!confirmed) return;
+
+                const lessConfirmed = await confirmLessOverMoreIfNeeded({
+                    sourceLabel: '云端版本',
+                    sourceCount: cloudSummary.settingsCount,
+                    targetLabel: '本地版本',
+                    targetCount: localSummary.settingsCount,
+                    actionLabel: '下载',
+                    targetShortLabel: '本地',
+                    okText: '继续下载'
+                });
+                if (!lessConfirmed) return;
+
+                setSyncBusy(true, '正在下载云端版本...');
+                await applyCloudLibraryToLocal(cloud.data);
+                const nextLocal = await getLocalSyncSummary();
+                updateSyncDetailsHtml(buildSyncStatusHtml(nextLocal, cloudSummary));
+                showToast('已下载云端版本', 'success');
+            } catch (error) {
+                if (error && ['not signed in', 'wrong sync user'].includes(error.message)) return;
+                showToast(getFriendlyFirebaseError(error), 'danger');
+                updateSyncDetailsHtml(`
+                    <div class="sync-detail-title">下载失败</div>
+                    <div>${escapeHtml(getFriendlyFirebaseError(error))}</div>
+                `);
+            } finally {
+                setSyncBusy(false);
+                updateSyncUi();
+            }
+        }
+
+        async function applyCloudLibraryToLocal(data) {
+            const normalized = normalizeCloudLibraryData(data);
+            const hash = data.contentHash || await calculateContentHash(normalized.settings, normalized.categories);
+            const versionTime = data.versionTime || data.lastModified?.versionTime || data.lastModified?.time || getNowString();
+
+            settings = normalized.settings;
+            categories = normalized.categories;
+            versionHistory = normalized.versionHistory;
+
+            if (!versionHistory[hash]) {
+                versionHistory[hash] = versionTime;
+            }
+
+            lastModified = {
+                time: versionHistory[hash],
+                hash: hash,
+                versionTime: versionHistory[hash],
+                contentHash: hash
+            };
+
+            currentCategory = 'all';
+            organizeMode = false;
+            batchSelectedIds.clear();
+            document.body.classList.remove('mobile-organize-active');
+
+            await saveSettings();
+            renderCategories();
+            renderSettings();
+            updateFooter();
+            updateLibraryState();
+        }
+
+        function normalizeCloudLibraryData(data) {
+            const baseCategories = Array.isArray(data?.categories) && data.categories.length
+                ? data.categories.map(cat => String(cat || '').trim()).filter(Boolean)
+                : ['未分类'];
+
+            const categoriesSeen = [];
+            baseCategories.forEach(cat => {
+                if (cat && !categoriesSeen.includes(cat)) categoriesSeen.push(cat);
+            });
+            if (!categoriesSeen.length) categoriesSeen.push('未分类');
+
+            const defaultCategory = categoriesSeen[0];
+            const rawSettings = Array.isArray(data?.settings) ? data.settings : [];
+            const normalizedSettings = rawSettings.map((item, index) => {
+                const rawCategory = String(item?.category || defaultCategory).trim() || defaultCategory;
+                if (!categoriesSeen.includes(rawCategory)) categoriesSeen.push(rawCategory);
+
+                const numericId = Number(item?.id);
+                return {
+                    id: Number.isFinite(numericId) ? numericId : Date.now() + index,
+                    content: String(item?.content || ''),
+                    category: rawCategory,
+                    created: item?.created || ''
+                };
+            });
+
+            const incomingHistory = data?.versionHistory && typeof data.versionHistory === 'object'
+                ? { ...data.versionHistory }
+                : {};
+
+            return {
+                settings: normalizedSettings,
+                categories: categoriesSeen,
+                versionHistory: incomingHistory
+            };
+        }
+
+        async function showCloudSyncStatus(showSuccessToast = true) {
+            try {
+                await assertSyncReadyAndAllowed();
+                setSyncBusy(true, '正在查看同步状态...');
+                const localSummary = await getLocalSyncSummary();
+                const cloud = await fetchCloudLibrary();
+                updateSyncDetailsHtml(buildSyncStatusHtml(localSummary, cloud.summary));
+                if (showSuccessToast) showToast('同步状态已更新', 'success');
+            } catch (error) {
+                if (error && ['not signed in', 'wrong sync user'].includes(error.message)) return;
+                showToast(getFriendlyFirebaseError(error), 'danger');
+                updateSyncDetailsHtml(`
+                    <div class="sync-detail-title">状态读取失败</div>
+                    <div>${escapeHtml(getFriendlyFirebaseError(error))}</div>
+                `);
+            } finally {
+                setSyncBusy(false);
+                updateSyncUi();
+            }
+        }
+
+        function buildSyncStatusHtml(localSummary, cloudSummary) {
+            const sameHash = cloudSummary.exists && localSummary.contentHash === cloudSummary.contentHash;
+            const statusText = cloudSummary.exists
+                ? (sameHash ? '本地与云端一致' : '本地与云端不同')
+                : '云端暂无数据';
+
+            return `
+                <div class="sync-detail-title">${escapeHtml(statusText)}</div>
+                <div class="sync-line"><span>本地版本</span><strong>${escapeHtml(localSummary.versionTime)}</strong></div>
+                <div class="sync-line"><span>云端版本</span><strong>${escapeHtml(cloudSummary.versionTime)}</strong></div>
+                <div class="sync-line"><span>云端同步</span><strong>${escapeHtml(cloudSummary.syncUpdatedAt)}</strong></div>
+                <div class="sync-line"><span>本地数量</span><strong>${localSummary.settingsCount} 条 / ${localSummary.categoriesCount} 个分类</strong></div>
+                <div class="sync-line"><span>云端数量</span><strong>${cloudSummary.settingsCount} 条 / ${cloudSummary.categoriesCount} 个分类</strong></div>
+            `;
+        }
+
+        function getFriendlyFirebaseError(error) {
+            const code = error?.code || '';
+            const message = error?.message || String(error || '未知错误');
+
+            const map = {
+                'auth/invalid-email': 'You shall not pass!',
+                'auth/user-disabled': 'You shall not pass!',
+                'auth/user-not-found': 'You shall not pass!',
+                'auth/wrong-password': 'You shall not pass!',
+                'auth/invalid-credential': 'You shall not pass!',
+                'auth/too-many-requests': '登录尝试过多，请稍后再试。',
+                'permission-denied': 'Firestore 拒绝访问。请确认当前登录的是唯一授权账号，并且安全规则已经发布。',
+                'unavailable': '暂时无法连接 Firebase。请检查网络后再试。'
+            };
+
+            if (map[code]) return map[code];
+            if (message.includes('Failed to fetch') || message.includes('无法加载')) {
+                return '无法连接 Firebase SDK。本地设定仍可使用；同步需要能访问 Firebase。';
+            }
+            return message;
+        }
+
+
         async function getVersionTimeForImport(sourceSettings, sourceCategories, importedData = null) {
             const hash = await calculateContentHash(sourceSettings, sourceCategories);
             let time = null;
@@ -4703,7 +7058,7 @@
         async function buildImportConfirmMessage(importInfo) {
             const current = await ensureVersionState();
             return [
-                '即将覆盖当前设定库',
+                '即将替换当前设定',
                 '',
                 `导入版本：${importInfo.versionTime}`,
                 `导入条目：${importInfo.settingsCount} 条`,
@@ -4713,7 +7068,7 @@
                 `当前条目：${settings.length} 条`,
                 `当前分类：${categories.length} 个`,
                 '',
-                '是否继续覆盖？'
+                '是否继续替换？'
             ].join('\n');
         }
 
@@ -4727,21 +7082,27 @@
                 try {
                     const content = e.target.result;
 
-                    // 尝试解析为JSON（完整覆盖导入）
+                    // 尝试解析为JSON（完整替换导入）
                     try {
                         const data = JSON.parse(content);
                         const incomingSettings = Array.isArray(data.settings) ? data.settings : [];
                         const incomingCategories = Array.isArray(data.categories) && data.categories.length ? data.categories : ['未分类'];
+
+                        if (incomingSettings.length === 0) {
+                            showToast('导入内容为空，已阻止替换。', 'warning');
+                            return;
+                        }
+
                         const importVersion = await getVersionTimeForImport(incomingSettings, incomingCategories, data);
 
                         const confirmed = await showCustomConfirm({
-                            title: '覆盖导入',
+                            title: '替换导入',
                             html: await formatImportConfirmHtml({
                                 versionTime: importVersion.time,
                                 settingsCount: incomingSettings.length,
                                 categoriesCount: incomingCategories.length
                             }),
-                            okText: '覆盖导入',
+                            okText: '导入内容',
                             cancelText: '取消',
                             fallbackMessage: await buildImportConfirmMessage({
                                 versionTime: importVersion.time,
@@ -4751,6 +7112,19 @@
                         });
 
                         if (!confirmed) {
+                            return;
+                        }
+
+                        const lessConfirmed = await confirmLessOverMoreIfNeeded({
+                            sourceLabel: '导入内容',
+                            sourceCount: incomingSettings.length,
+                            targetLabel: '当前设定',
+                            targetCount: settings.length,
+                            actionLabel: '导入',
+                            targetShortLabel: '本地',
+                            okText: '继续导入'
+                        });
+                        if (!lessConfirmed) {
                             return;
                         }
 
@@ -4775,7 +7149,7 @@
                         };
 
                     } catch {
-                        // 如果不是JSON，作为纯文字覆盖导入
+                        // 如果不是JSON，作为纯文字替换导入
                         const items = content.split('\n\n').filter(s => s.trim());
                         const incomingCategories = [getDefaultCategory()];
                         const incomingSettings = items.map((item, index) => ({
@@ -4784,16 +7158,21 @@
                             category: incomingCategories[0],
                             created: new Date().toLocaleString('zh-CN')
                         }));
+                        if (incomingSettings.length === 0) {
+                            showToast('导入内容为空，已阻止替换。', 'warning');
+                            return;
+                        }
+
                         const importVersion = await getVersionTimeForImport(incomingSettings, incomingCategories, null);
 
                         const confirmed = await showCustomConfirm({
-                            title: '覆盖导入',
+                            title: '替换导入',
                             html: await formatImportConfirmHtml({
                                 versionTime: importVersion.time,
                                 settingsCount: incomingSettings.length,
                                 categoriesCount: incomingCategories.length
                             }),
-                            okText: '覆盖导入',
+                            okText: '导入内容',
                             cancelText: '取消',
                             fallbackMessage: await buildImportConfirmMessage({
                                 versionTime: importVersion.time,
@@ -4803,6 +7182,19 @@
                         });
 
                         if (!confirmed) {
+                            return;
+                        }
+
+                        const lessConfirmed = await confirmLessOverMoreIfNeeded({
+                            sourceLabel: '导入内容',
+                            sourceCount: incomingSettings.length,
+                            targetLabel: '当前设定',
+                            targetCount: settings.length,
+                            actionLabel: '导入',
+                            targetShortLabel: '本地',
+                            okText: '继续导入'
+                        });
+                        if (!lessConfirmed) {
                             return;
                         }
 
@@ -4866,6 +7258,7 @@
         // 关闭模态框
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
+            updateGlobalModalState();
             if (id === 'manageCategoryModal') {
                 managingCategory = null;
             }
@@ -4886,7 +7279,9 @@
         }
         
         document.addEventListener('click', function() {
-            document.querySelectorAll('.edit-category-picker.open').forEach(picker => picker.classList.remove('open'));
+            if (typeof closeAllCategoryPickers === 'function') {
+                closeAllCategoryPickers();
+            }
         });
 
         // 搜索功能
@@ -5011,24 +7406,9 @@
         }
 
         function startMobileOrganize() {
-            const defaultCategory = getDefaultCategory();
-            const count = settings.filter(s => s.category === defaultCategory).length;
-
-            if (count === 0) {
-                showToast('未分类里暂无可整理条目', 'warning');
-                closeMobileCategoryDrawer();
-                return;
-            }
-
-            currentCategory = defaultCategory;
-            libraryExpanded = true;
-            organizeMode = true;
-            batchSelectedIds.clear();
-
             closeMobileCategoryDrawer();
             closeMobileTools();
-            updateLibraryState();
-            renderCategories();
+            enterOrganizeMode();
             renderSettings();
         }
 
@@ -5123,7 +7503,7 @@
         function updateMobileScrollBottomVisibility() {
             const btn = document.getElementById('mobileScrollBottomBtn');
             if (!btn) return;
-            const shouldShow = libraryExpanded && !organizeMode && !document.querySelector('.setting-item.editing');
+            const shouldShow = libraryExpanded && !organizeMode && !document.querySelector('.setting-item.editing') && !document.querySelector('.modal.active');
             btn.classList.toggle('active', shouldShow);
         }
 
@@ -5131,6 +7511,13 @@
         (async function initializeApp() {
             await loadSettings();
             updateLibraryState();
+            bindGlobalModalStateObserver();
+            bindSyncInputEvents();
+            bindFrontGateInputEvents();
+            updateSyncUi();
+            initializeFrontGate().catch(error => {
+                setFrontGateStatus(getFriendlyFirebaseError(error), 'error');
+            });
         })();
     </script>
 </body>
